@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Coursework</title>
+<title>HW Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -42,7 +42,6 @@
   }
   .wrap{ max-width: 980px; margin:0 auto; padding: 0 1.5rem 5rem; }
 
-  /* Header */
   header{ padding: 3.5rem 0 2rem; }
   .eyebrow{
     display:inline-flex; align-items:center; gap:6px;
@@ -59,7 +58,6 @@
   }
   header p{ color: var(--text-2); font-size:15.5px; max-width:520px; margin:0; line-height:1.6; }
 
-  /* Stats row */
   .stats{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin: 2rem 0 2.5rem; }
   .stat{
     background: var(--surface); border:1px solid var(--border);
@@ -68,7 +66,6 @@
   .stat-num{ font-family:'Sora', sans-serif; font-weight:700; font-size:24px; letter-spacing:-0.01em; }
   .stat-label{ font-size:12.5px; color: var(--text-2); margin-top:2px; }
 
-  /* Form card */
   .new-card{
     background: var(--surface);
     border:1px solid var(--border);
@@ -105,7 +102,6 @@
   button.primary:hover{ background: var(--accent-hover); }
   button.primary:active{ transform: scale(0.98); }
 
-  /* Controls */
   .controls{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:1.1rem; }
   .search-wrap{ position:relative; flex:1; min-width:220px; }
   .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-3); }
@@ -124,7 +120,6 @@
   .subject-tab.active .dot{ background:#fff; }
   .subject-tab:hover:not(.active){ border-color: var(--text-2); color: var(--text); }
 
-  /* Entry grid */
   #entries{ display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px; }
   .card{
     position:relative;
@@ -138,13 +133,42 @@
     border-radius: 3px; background: var(--dot, var(--accent));
   }
   .card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-hover); }
-  .card-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; padding-left:6px; }
+  .card-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; padding-left:6px; gap:10px; }
   .card-subject{
     display:inline-flex; align-items:center; gap:6px;
     font-family:'Sora', sans-serif; font-weight:600; font-size:14.5px; margin:0 0 3px;
   }
   .card-subject .dot{ width:7px; height:7px; border-radius:50%; background: var(--dot, var(--accent)); flex-shrink:0; }
   .card-date{ font-size:12px; color: var(--text-3); font-weight:500; }
+
+  .done-toggle{
+    display:inline-flex; align-items:center; gap:6px; flex-shrink:0;
+    font-family:'Inter', sans-serif; font-size:12px; font-weight:500;
+    color: var(--text-2); cursor:pointer; padding:5px 10px;
+    border-radius:999px; border:1px solid var(--border-strong); background:var(--surface-2);
+    transition: all .12s ease;
+  }
+  .done-toggle input{ display:none; }
+  .done-toggle .check{
+    width:14px; height:14px; border-radius:4px; border:1.5px solid var(--border-strong);
+    display:flex; align-items:center; justify-content:center; flex-shrink:0;
+    transition: all .12s ease;
+  }
+  .done-toggle .check svg{ opacity:0; transition: opacity .12s ease; }
+  .done-toggle.is-done{ background:#EAFBF3; border-color:#B7E9D2; color:#1B7A4C; }
+  .done-toggle.is-done .check{ background:#1B9E5B; border-color:#1B9E5B; }
+  .done-toggle.is-done .check svg{ opacity:1; }
+
+  .card.completed{ opacity:0.62; }
+  .card.completed .card-text{ text-decoration: line-through; text-decoration-color: var(--text-3); }
+
+  .due-badge{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:11.5px; font-weight:600; letter-spacing:0.01em;
+    padding: 4px 9px; border-radius:999px; margin-top:2px;
+    background: var(--surface-2); color: var(--text-2); border:1px solid var(--border-strong);
+  }
+  .due-badge.overdue{ background:#FDEDED; color:#B0362F; border-color:#F4C6C2; }
   .card-section{ padding-left:6px; margin-bottom:9px; }
   .card-section:last-of-type{ margin-bottom:0; }
   .card-label{ font-size:11px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase; color: var(--text-3); margin:0 0 3px; }
@@ -200,6 +224,10 @@
       <textarea id="f-homework" placeholder="What's due, and when"></textarea>
     </div>
     <div class="field">
+      <label for="f-due">Due date <span style="font-weight:400; text-transform:none; letter-spacing:0;">(optional)</span></label>
+      <input type="date" id="f-due">
+    </div>
+    <div class="field">
       <label for="f-notes">Notes</label>
       <textarea id="f-notes" placeholder="Key points from class"></textarea>
     </div>
@@ -233,6 +261,7 @@
   const dateEl = document.getElementById('f-date');
   const subjectEl = document.getElementById('f-subject');
   const hwEl = document.getElementById('f-homework');
+  const dueEl = document.getElementById('f-due');
   const notesEl = document.getElementById('f-notes');
   const errEl = document.getElementById('f-error');
   const searchEl = document.getElementById('f-search');
@@ -292,8 +321,10 @@
     renderStats();
     renderTabs();
     const q = searchEl.value.trim().toLowerCase();
+    const todayStr = new Date().toISOString().slice(0,10);
     let list = [...entries].sort((a,b) => b.date.localeCompare(a.date));
     list = list.filter(e => {
+      if (e.done && e.dueDate && e.dueDate < todayStr) return false;
       if (activeSubject && e.subject !== activeSubject) return false;
       if (!q) return true;
       return e.subject.toLowerCase().includes(q) || (e.homework||'').toLowerCase().includes(q) || (e.notes||'').toLowerCase().includes(q);
@@ -307,15 +338,20 @@
       return;
     }
 
-    entriesEl.innerHTML = list.map(e => { const color = colorForSubject(e.subject); return `
-      <div class="card" style="--dot:${color}">
+    entriesEl.innerHTML = list.map(e => { const color = colorForSubject(e.subject); const isDone = !!e.done; return `
+      <div class="card ${isDone ? 'completed' : ''}" style="--dot:${color}">
         <div class="card-head">
           <div>
             <p class="card-subject"><span class="dot" style="background:${color}"></span>${escapeHtml(e.subject)}</p>
             <p class="card-date">${fmtDate(e.date)}</p>
           </div>
+          <label class="done-toggle ${isDone ? 'is-done' : ''}">
+            <input type="checkbox" class="chk-done" data-id="${e.id}" ${isDone ? 'checked' : ''}>
+            <span class="check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            ${isDone ? 'Done' : 'Mark done'}
+          </label>
         </div>
-        ${e.homework ? `<div class="card-section"><p class="card-label">Homework</p><p class="card-text">${escapeHtml(e.homework)}</p></div>` : ''}
+        ${e.homework ? `<div class="card-section"><p class="card-label">Homework</p><p class="card-text">${escapeHtml(e.homework)}</p>${e.dueDate ? `<span class="due-badge ${(!isDone && e.dueDate < todayStr) ? 'overdue' : ''}">Due ${fmtDate(e.dueDate)}</span>` : ''}</div>` : ''}
         ${e.notes ? `<div class="card-section"><p class="card-label">Notes</p><p class="card-text">${escapeHtml(e.notes)}</p></div>` : ''}
         <div class="card-actions">
           <button class="btn-del" data-id="${e.id}">
@@ -333,21 +369,30 @@
         save(); render();
       });
     });
+
+    entriesEl.querySelectorAll('.chk-done').forEach(chk => {
+      chk.addEventListener('change', () => {
+        const id = chk.getAttribute('data-id');
+        const entry = entries.find(e => e.id === id);
+        if (entry){ entry.done = chk.checked; save(); render(); }
+      });
+    });
   }
 
   document.getElementById('btn-add').addEventListener('click', () => {
     const date = dateEl.value;
     const subject = subjectEl.value.trim();
     const homework = hwEl.value.trim();
+    const dueDate = dueEl.value;
     const notes = notesEl.value.trim();
 
     if (!date || !subject){ errEl.textContent = 'Enter a date and subject first.'; errEl.style.display = 'block'; return; }
     if (!homework && !notes){ errEl.textContent = 'Add homework or notes before saving.'; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
 
-    entries.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), date, subject, homework, notes });
+    entries.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), date, subject, homework, dueDate, notes, done: false });
     save();
-    subjectEl.value = ''; hwEl.value = ''; notesEl.value = '';
+    subjectEl.value = ''; hwEl.value = ''; dueEl.value = ''; notesEl.value = '';
     render();
   });
 
