@@ -113,6 +113,16 @@
   .live-status .ls-main .ls-sub{ font-weight:400; opacity:0.85; font-size:13px; display:block; margin-top:2px; }
   .live-status .ls-time{ font-family:'JetBrains Mono', monospace; font-size:22px; font-weight:600; letter-spacing:0.01em; }
 
+  .section-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-3); margin:0 0 8px; }
+  .today-list{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); margin-bottom:1.5rem; overflow:hidden; box-shadow: var(--shadow-card); }
+  .today-row{ display:flex; align-items:center; gap:10px; padding:11px 1.1rem; border-bottom:1px solid var(--border); }
+  .today-row:last-child{ border-bottom:none; }
+  .today-row.is-now{ background: var(--accent-bg); }
+  .today-row .dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .today-row .trow-main{ flex:1; font-size:13.5px; color: var(--text); }
+  .today-row .trow-sub{ font-size:12px; color: var(--text-3); }
+  .today-empty{ padding:1rem 1.1rem; font-size:13.5px; color: var(--text-3); }
+
   .week-grid{ display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; }
   .day-col{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding:0.75rem; min-height:120px; }
   .day-col.is-today{ border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
@@ -183,15 +193,26 @@
   </header>
 
   <nav class="tabbar">
-    <button class="tab-btn active" data-view="homework">Homework</button>
+    <button class="tab-btn active" data-view="today">Today</button>
+    <button class="tab-btn" data-view="homework">Homework</button>
     <button class="tab-btn" data-view="tests">Tests</button>
-    <button class="tab-btn" data-view="schedule">Schedule</button>
     <button class="tab-btn" data-view="grades">Grades</button>
     <button class="tab-btn" data-view="calendar">Calendar</button>
   </nav>
 
+  <!-- TODAY -->
+  <section id="view-today" class="view active">
+    <div class="live-status" id="live-status">Checking the time…</div>
+    <p class="section-label">Today's classes</p>
+    <div class="today-list" id="today-classes"></div>
+    <p class="section-label">Homework due today</p>
+    <div class="today-list" id="today-homework"></div>
+    <p class="section-label">Tests today</p>
+    <div class="today-list" id="today-tests"></div>
+  </section>
+
   <!-- HOMEWORK -->
-  <section id="view-homework" class="view active">
+  <section id="view-homework" class="view">
     <div class="stats">
       <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total entries</div></div>
       <div class="stat"><div class="stat-num" id="stat-due">0</div><div class="stat-label">Still due</div></div>
@@ -239,15 +260,6 @@
     </div>
     <div class="tabs-row" id="test-subject-tabs"></div>
     <div id="test-entries"></div>
-  </section>
-
-  <!-- SCHEDULE -->
-  <section id="view-schedule" class="view">
-    <div class="panel" style="padding:1.25rem 1.5rem;">
-      <h2 style="margin:0;">Your schedule</h2>
-      <p style="font-size:13px; color:var(--text-2); margin:6px 0 0;">Mon &amp; Fri run regular schedule, Tue &amp; Thu run homeroom schedule, Wed is late start.</p>
-    </div>
-    <div class="live-status" id="live-status">Checking the time…</div>
   </section>
 
   <!-- GRADES -->
@@ -310,7 +322,6 @@
     Thu: [{p:1,start:'07:45',end:'08:30'},{p:2,start:'08:35',end:'09:20'},{p:3,start:'10:15',end:'11:00'},{p:5,start:'11:55',end:'12:40'},{p:6,start:'12:45',end:'13:30'},{p:7,start:'13:35',end:'14:20'},{p:8,start:'14:25',end:'15:10'}],
     Fri: [{p:1,start:'07:45',end:'08:35'},{p:2,start:'08:41',end:'09:34'},{p:3,start:'09:40',end:'10:30'},{p:5,start:'11:32',end:'12:22'},{p:6,start:'12:28',end:'13:18'},{p:7,start:'13:24',end:'14:14'},{p:8,start:'14:20',end:'15:10'}]
   };
-  // Full-day period map including lunch (period 4) — used only for the live schedule clock, never shown in Schedule/Grades UI.
   const ALL_PERIODS = {
     Mon: [...DEFAULT_PERIODS.Mon.slice(0,3), {p:4,start:'10:36',end:'11:26'}, ...DEFAULT_PERIODS.Mon.slice(3)],
     Tue: [...DEFAULT_PERIODS.Tue.slice(0,2), {p:4,start:'11:05',end:'11:50'}, ...DEFAULT_PERIODS.Tue.slice(2)],
@@ -361,7 +372,6 @@
     sel.innerHTML = FIXED_CLASSES.map(c => `<option value="${escapeHtml(c.name)}">Period ${c.period}: ${escapeHtml(c.name)}</option>`).join('');
   }
 
-  // tabs
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -370,13 +380,12 @@
       document.getElementById('view-' + btn.getAttribute('data-view')).classList.add('active');
       const v = btn.getAttribute('data-view');
       if (v === 'calendar') renderCalendar();
-      if (v === 'schedule') renderSchedule();
+      if (v === 'today') renderToday();
       if (v === 'grades') renderGrades();
       if (v === 'tests') renderTests();
     });
   });
 
-  // ================= HOMEWORK =================
   const subjectEl = document.getElementById('f-subject');
   const hwEl = document.getElementById('f-homework');
   const dueEl = document.getElementById('f-due');
@@ -444,7 +453,6 @@
   hwEl.addEventListener('input', () => { errEl.style.display = 'none'; });
   searchEl.addEventListener('input', renderHomework);
 
-  // ================= TESTS =================
   const tSubjectEl = document.getElementById('t-subject');
   const tTitleEl = document.getElementById('t-title');
   const tDueEl = document.getElementById('t-due');
@@ -503,7 +511,6 @@
   tTitleEl.addEventListener('input', () => { tErrEl.style.display = 'none'; });
   tSearchEl.addEventListener('input', renderTests);
 
-  // ================= SCHEDULE (live banner only) =================
   const liveStatusEl = document.getElementById('live-status');
 
   function periodLabelFor(p){
@@ -558,11 +565,51 @@
   }
   setInterval(updateLiveStatus, 1000);
 
-  function renderSchedule(){
+  function renderToday(){
     updateLiveStatus();
+    const todayName = DAYS[(new Date().getDay() + 6) % 7];
+    const todayStr = new Date().toISOString().slice(0,10);
+    const status = getLiveStatus(new Date());
+    const nowPeriod = status.type === 'in-period' ? status.period : null;
+
+    const classesToday = schedule.filter(c => c.day === todayName).sort((a,b) => a.period - b.period);
+    const classesEl = document.getElementById('today-classes');
+    if (classesToday.length === 0){
+      classesEl.innerHTML = `<div class="today-empty">No classes today.</div>`;
+    } else {
+      classesEl.innerHTML = classesToday.map(c => { const color = colorForSubject(c.subject); const isNow = c.period === nowPeriod; return `
+        <div class="today-row ${isNow ? 'is-now' : ''}">
+          <span class="dot" style="background:${color}"></span>
+          <span class="trow-main">Period ${c.period} · ${escapeHtml(c.subject)}</span>
+          <span class="trow-sub">${isNow ? 'now' : fmtTime(c.start)}</span>
+        </div>`; }).join('');
+    }
+
+    const hwToday = entries.filter(e => e.dueDate === todayStr);
+    const hwTodayEl = document.getElementById('today-homework');
+    if (hwToday.length === 0){
+      hwTodayEl.innerHTML = `<div class="today-empty">Nothing due today.</div>`;
+    } else {
+      hwTodayEl.innerHTML = hwToday.map(e => { const color = colorForSubject(e.subject); return `
+        <div class="today-row">
+          <span class="dot" style="background:${color}"></span>
+          <div><p class="trow-main" style="margin:0;">${escapeHtml(e.subject)}</p><p class="trow-sub" style="margin:2px 0 0;">${escapeHtml(e.homework)}</p></div>
+        </div>`; }).join('');
+    }
+
+    const testsToday = tests.filter(t => t.dueDate === todayStr);
+    const testsTodayEl = document.getElementById('today-tests');
+    if (testsToday.length === 0){
+      testsTodayEl.innerHTML = `<div class="today-empty">No tests today.</div>`;
+    } else {
+      testsTodayEl.innerHTML = testsToday.map(t => { const color = colorForSubject(t.subject); return `
+        <div class="today-row">
+          <span class="dot" style="background:${color}"></span>
+          <div><p class="trow-main" style="margin:0;">${escapeHtml(t.subject)}</p><p class="trow-sub" style="margin:2px 0 0;">${escapeHtml(t.title)}</p></div>
+        </div>`; }).join('');
+    }
   }
 
-  // ================= GRADES (simple, no assignments) =================
   const gradeCardsEl = document.getElementById('grade-cards');
   function renderGrades(){
     gradeCardsEl.innerHTML = FIXED_CLASSES.map(c => { const color = colorForSubject(c.name); const val = gradeValues[c.name] || ''; return `
@@ -575,7 +622,6 @@
     });
   }
 
-  // ================= CALENDAR =================
   const calTitle = document.getElementById('cal-title');
   const calDowRow = document.getElementById('cal-dow-row');
   const calGridEl = document.getElementById('cal-grid');
@@ -639,13 +685,12 @@
   document.getElementById('cal-next').addEventListener('click', () => { calMonth++; if (calMonth > 11){ calMonth = 0; calYear++; } renderCalendar(); });
   document.getElementById('cal-today').addEventListener('click', () => { const n = new Date(); calYear = n.getFullYear(); calMonth = n.getMonth(); renderCalendar(); });
 
-  // ---------- init ----------
   loadAll();
   seedDefaults();
   dueEl.value = '';
   renderHomework();
   renderTests();
-  renderSchedule();
+  renderToday();
   renderGrades();
   renderCalendar();
   updateLiveStatus();
