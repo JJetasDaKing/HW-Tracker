@@ -42,6 +42,762 @@
 
   .panel{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 1.75rem; margin-bottom: 2.25rem; }
   .panel h2{ font-family:'Sora', sans-serif; font-size:16px; font-weight:600; margin:0 0 1.25rem; }
+  .panel p.hint{ font-size:13px; color:var(--text-2); margin:6px 0 1.25rem; }
+  .field-row{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px; }
+  .field{ margin-bottom:14px; }
+  label{ display:block; font-size:13px; font-weight:500; color: var(--text-2); margin-bottom:6px; }
+  input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea, select{
+    width:100%; font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+    background: var(--surface-2); border:1px solid var(--border-strong); border-radius: var(--radius-sm);
+    padding:10px 12px; transition: box-shadow .12s ease, border-color .12s ease; appearance:none;
+  }
+  select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236C6C80' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:34px; }
+  textarea{ min-height:78px; resize:vertical; line-height:1.55; font-family:'Inter',sans-serif; }
+  input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible{ outline:none; border-color: var(--accent); box-shadow: var(--shadow-focus); }
+  .error-msg{ display:none; font-size:13px; color: var(--danger); margin: -4px 0 12px; font-weight:500; }
+
+  button.primary{ display:inline-flex; align-items:center; gap:8px; font-family:'Inter', sans-serif; font-size:14px; font-weight:600; background: var(--accent); color:#fff; border:none; border-radius: var(--radius-sm); padding: 11px 18px; cursor:pointer; transition: background .12s ease, transform .08s ease; }
+  button.primary:hover{ background: var(--accent-hover); }
+  button.primary:active{ transform: scale(0.98); }
+  button.secondary{ display:inline-flex; align-items:center; gap:8px; font-family:'Inter', sans-serif; font-size:13.5px; font-weight:600; background: var(--surface); color: var(--text); border:1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 9px 16px; cursor:pointer; transition: all .12s ease; }
+  button.secondary:hover{ border-color: var(--text-2); }
+
+  .controls{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:1.1rem; }
+  .search-wrap{ position:relative; flex:1; min-width:220px; }
+  .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-3); }
+  .search-wrap input{ padding-left:36px; background:var(--surface); }
+  .tabs-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:1.75rem; }
+  .subject-tab{ display:inline-flex; align-items:center; gap:7px; font-family:'Inter', sans-serif; font-size:13px; font-weight:500; padding: 7px 14px; border-radius:999px; border:1px solid var(--border-strong); background: var(--surface); color: var(--text-2); cursor:pointer; transition: all .12s ease; }
+  .subject-tab .dot{ width:7px; height:7px; border-radius:50%; background: var(--text-3); }
+  .subject-tab.active{ background: var(--text); color:#fff; border-color: var(--text); }
+  .subject-tab.active .dot{ background:#fff; }
+  .subject-tab:hover:not(.active){ border-color: var(--text-2); color: var(--text); }
+
+  .setup-banner{ background: var(--accent-bg); border:1px solid var(--border-strong); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+  .setup-banner p{ margin:0; font-size:13.5px; color: var(--text); font-weight:500; }
+  .setup-banner span{ display:block; font-weight:400; color: var(--text-2); font-size:12.5px; margin-top:2px; }
+
+  #entries, #test-entries{ display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:14px; }
+  .card{ position:relative; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem 1.3rem 1.1rem; box-shadow: var(--shadow-card); transition: transform .15s ease, box-shadow .15s ease; }
+  .card::before{ content:''; position:absolute; left:0; top:1.1rem; bottom:1.1rem; width:3px; border-radius: 3px; background: var(--dot, var(--accent)); }
+  .card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .card-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; padding-left:6px; gap:10px; }
+  .card-subject{ display:inline-flex; align-items:center; gap:6px; font-family:'Sora', sans-serif; font-weight:600; font-size:14.5px; margin:0 0 3px; }
+  .card-subject .dot{ width:7px; height:7px; border-radius:50%; background: var(--dot, var(--accent)); flex-shrink:0; }
+  .card-period{ font-size:11px; color: var(--text-3); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+  .card-date{ font-size:12px; color: var(--text-3); font-weight:500; }
+  .done-toggle{ display:inline-flex; align-items:center; gap:6px; flex-shrink:0; font-family:'Inter', sans-serif; font-size:12px; font-weight:500; color: var(--text-2); cursor:pointer; padding:5px 10px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface-2); transition: all .12s ease; }
+  .done-toggle input{ display:none; }
+  .done-toggle .check{ width:14px; height:14px; border-radius:4px; border:1.5px solid var(--border-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition: all .12s ease; }
+  .done-toggle .check svg{ opacity:0; transition: opacity .12s ease; }
+  .done-toggle.is-done{ background: var(--good-bg); border-color:#B7E9D2; color:#1B7A4C; }
+  .done-toggle.is-done .check{ background: var(--good); border-color: var(--good); }
+  .done-toggle.is-done .check svg{ opacity:1; }
+  .card.completed{ opacity:0.62; }
+  .card.completed .card-text{ text-decoration: line-through; text-decoration-color: var(--text-3); }
+  .due-badge{ display:inline-flex; align-items:center; gap:5px; font-size:11.5px; font-weight:600; padding: 4px 9px; border-radius:999px; margin-top:2px; background: var(--surface-2); color: var(--text-2); border:1px solid var(--border-strong); }
+  .due-badge.overdue{ background:#FDEDED; color:#B0362F; border-color:#F4C6C2; }
+  .card-section{ padding-left:6px; margin-bottom:9px; }
+  .card-section:last-of-type{ margin-bottom:0; }
+  .card-label{ font-size:11px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase; color: var(--text-3); margin:0 0 3px; }
+  .card-text{ font-size:14px; line-height:1.55; margin:0; white-space:pre-wrap; color: var(--text); }
+  .card-actions{ display:flex; justify-content:flex-end; margin-top:10px; padding-left:6px; }
+  .btn-del{ display:inline-flex; align-items:center; gap:5px; background:none; border:none; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500; color: var(--text-3); cursor:pointer; padding:4px 6px; border-radius:6px; }
+  .btn-del:hover{ color: var(--danger); background: var(--danger-bg); }
+  .empty{ grid-column:1/-1; text-align:center; padding: 3.5rem 1rem; color: var(--text-2); font-size:14.5px; }
+  .empty svg{ margin-bottom:12px; color: var(--text-3); }
+
+  .live-status{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
+    background: linear-gradient(135deg, var(--accent) 0%, #7A6FE8 100%); color:#fff;
+    border-radius: var(--radius-lg); padding:1.1rem 1.4rem; margin-bottom:1.25rem;
+    font-family:'Inter', sans-serif; transition: background .4s ease;
+  }
+  .live-status.status-green{ background: linear-gradient(135deg, #1B9E5B 0%, #16A672 100%); }
+  .live-status.status-yellow{ background: linear-gradient(135deg, #C98A12 0%, #E0A429 100%); }
+  .live-status.status-red{ background: linear-gradient(135deg, #C23B32 0%, #DB4C42 100%); }
+  .live-status .ls-main{ font-size:15px; font-weight:600; }
+  .live-status .ls-main .ls-sub{ font-weight:400; opacity:0.85; font-size:13px; display:block; margin-top:2px; }
+  .live-status .ls-time{ font-family:'JetBrains Mono', monospace; font-size:22px; font-weight:600; letter-spacing:0.01em; }
+
+  .section-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-3); margin:0 0 8px; }
+  .today-list{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); margin-bottom:1.5rem; overflow:hidden; box-shadow: var(--shadow-card); }
+  .today-row{ display:flex; align-items:center; gap:10px; padding:11px 1.1rem; border-bottom:1px solid var(--border); }
+  .today-row:last-child{ border-bottom:none; }
+  .today-row.is-now{ background: var(--accent-bg); }
+  .today-row .dot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .today-row .trow-main{ flex:1; font-size:13.5px; color: var(--text); }
+  .today-row .trow-sub{ font-size:12px; color: var(--text-3); }
+  .today-empty{ padding:1rem 1.1rem; font-size:13.5px; color: var(--text-3); }
+
+  .grade-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 1.1rem 1.3rem; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
+  .grade-card::before{ content:none; }
+  .grade-left{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .grade-left .dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .grade-name{ font-family:'Sora', sans-serif; font-weight:600; font-size:15px; }
+  .grade-period{ font-size:11.5px; color: var(--text-3); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
+  .grade-input-wrap{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .grade-input-wrap input{ width:110px; text-align:center; font-weight:600; }
+
+  .cal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
+  .cal-title{ font-family:'Sora', sans-serif; font-weight:700; font-size:18px; }
+  .cal-nav{ display:flex; gap:6px; }
+  .cal-nav button{ background: var(--surface); border:1px solid var(--border-strong); border-radius:8px; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text); }
+  .cal-nav button:hover{ border-color: var(--text-2); }
+  .cal-grid{ display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; }
+  .cal-dow{ text-align:center; font-size:11px; font-weight:600; color: var(--text-3); text-transform:uppercase; letter-spacing:0.03em; padding-bottom:6px; }
+  .cal-cell{ background: var(--surface); border:1px solid var(--border); border-radius:10px; min-height:74px; padding:6px; cursor:pointer; transition: all .1s ease; }
+  .cal-cell:hover{ border-color: var(--text-2); }
+  .cal-cell.empty-cell{ background:transparent; border-color:transparent; cursor:default; }
+  .cal-cell.is-today{ border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .cal-cell.is-selected{ background: var(--accent-bg); border-color: var(--accent); }
+  .cal-daynum{ font-size:12.5px; font-weight:600; color: var(--text-2); }
+  .cal-dots{ display:flex; flex-wrap:wrap; gap:3px; margin-top:5px; }
+  .cal-dot{ width:6px; height:6px; border-radius:50%; }
+  .cal-more{ font-size:9.5px; color: var(--text-3); margin-top:2px; }
+  .day-detail{ margin-top:1.25rem; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding:1.1rem 1.25rem; }
+  .day-detail h3{ font-family:'Sora', sans-serif; font-size:14.5px; margin:0 0 10px; }
+  .detail-group-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-3); margin:12px 0 4px; }
+  .detail-group-label:first-child{ margin-top:0; }
+  .detail-item{ display:flex; align-items:flex-start; gap:8px; font-size:13.5px; padding:5px 0; }
+  .detail-item .dot{ width:7px; height:7px; border-radius:50%; margin-top:5px; flex-shrink:0; }
+  .detail-empty{ font-size:13px; color: var(--text-3); }
+
+  .class-row{ display:flex; align-items:center; gap:14px; padding:12px 0; border-bottom:1px solid var(--border); }
+  .class-row:last-child{ border-bottom:none; }
+  .class-row .cr-period{ width:96px; flex-shrink:0; }
+  .class-row .cr-period .dot{ width:9px; height:9px; border-radius:50%; display:inline-block; margin-right:7px; }
+  .class-row .cr-period-num{ font-family:'Sora', sans-serif; font-weight:600; font-size:13.5px; }
+  .class-row .cr-time{ font-size:11px; color: var(--text-3); margin-top:1px; }
+  .class-row input{ flex:1; }
+
+  footer{ text-align:center; margin-top:3rem; font-size:12.5px; color: var(--text-3); }
+
+  @media (max-width:560px){
+    .field-row{ grid-template-columns:1fr; }
+    .stats{ grid-template-columns: 1fr 1fr; }
+    .stats .stat:last-child{ grid-column: span 2; }
+    .tabbar{ font-size:12px; }
+    .tab-btn{ padding:9px 8px; font-size:12.5px; }
+    .cal-grid{ grid-template-columns: repeat(7, minmax(38px,1fr)); }
+    .cal-cell{ min-height:52px; padding:4px; }
+    .grade-card{ flex-direction:column; align-items:flex-start; }
+    .grade-input-wrap{ width:100%; }
+    .grade-input-wrap input{ width:100%; }
+    .class-row{ flex-direction:column; align-items:flex-start; gap:6px; }
+    .class-row .cr-period{ width:auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Personal · private to this device</span>
+    <h1>HW Tracker</h1>
+  </header>
+
+  <nav class="tabbar">
+    <button class="tab-btn active" data-view="today">Today</button>
+    <button class="tab-btn" data-view="homework">Homework</button>
+    <button class="tab-btn" data-view="tests">Tests</button>
+    <button class="tab-btn" data-view="grades">Grades</button>
+    <button class="tab-btn" data-view="calendar">Calendar</button>
+    <button class="tab-btn" data-view="classes">My Classes</button>
+  </nav>
+
+  <!-- TODAY -->
+  <section id="view-today" class="view active">
+    <div class="setup-banner" id="setup-banner" style="display:none;">
+      <p>Set up your class schedule to get started<span>Add the name of each class for your periods — the bell times are already built in.</span></p>
+      <button class="primary" id="setup-banner-btn">Set up classes</button>
+    </div>
+    <div class="live-status" id="live-status">Checking the time…</div>
+    <p class="section-label">Today's classes</p>
+    <div class="today-list" id="today-classes"></div>
+    <p class="section-label">Homework due today</p>
+    <div class="today-list" id="today-homework"></div>
+    <p class="section-label">Tests today</p>
+    <div class="today-list" id="today-tests"></div>
+  </section>
+
+  <!-- HOMEWORK -->
+  <section id="view-homework" class="view">
+    <div class="stats">
+      <div class="stat"><div class="stat-num" id="stat-total">0</div><div class="stat-label">Total entries</div></div>
+      <div class="stat"><div class="stat-num" id="stat-due">0</div><div class="stat-label">Still due</div></div>
+      <div class="stat"><div class="stat-num" id="stat-week">0</div><div class="stat-label">Added this week</div></div>
+    </div>
+    <div class="panel">
+      <h2>New homework</h2>
+      <div class="field-row">
+        <div class="field"><label for="f-subject">Class</label><select id="f-subject"></select></div>
+        <div class="field"><label for="f-due">Due date <span style="font-weight:400;">(optional)</span></label><input type="date" id="f-due"></div>
+      </div>
+      <div class="field"><label for="f-homework">What's due</label><textarea id="f-homework" placeholder="e.g. Worksheet 4.2, problems 1-20"></textarea></div>
+      <div class="field"><label for="f-notes">Notes <span style="font-weight:400;">(optional)</span></label><textarea id="f-notes" placeholder="Anything else worth remembering"></textarea></div>
+      <p class="error-msg" id="f-error"></p>
+      <button class="primary" id="btn-add">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add homework
+      </button>
+    </div>
+    <div class="controls">
+      <div class="search-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="f-search" placeholder="Search homework or notes"></div>
+    </div>
+    <div class="tabs-row" id="subject-tabs"></div>
+    <div id="entries"></div>
+  </section>
+
+  <!-- TESTS -->
+  <section id="view-tests" class="view">
+    <div class="panel">
+      <h2>New test / assignment</h2>
+      <div class="field-row">
+        <div class="field"><label for="t-subject">Class</label><select id="t-subject"></select></div>
+        <div class="field"><label for="t-due">Date <span style="font-weight:400;">(optional)</span></label><input type="date" id="t-due"></div>
+      </div>
+      <div class="field"><label for="t-title">Test / assignment name</label><input type="text" id="t-title" placeholder="e.g. Unit 3 Test, Essay Draft"></div>
+      <div class="field"><label for="t-notes">Notes <span style="font-weight:400;">(optional)</span></label><textarea id="t-notes" placeholder="What to study, format, etc."></textarea></div>
+      <p class="error-msg" id="t-error"></p>
+      <button class="primary" id="btn-add-test">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Add test / assignment
+      </button>
+    </div>
+    <div class="controls">
+      <div class="search-wrap"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="t-search" placeholder="Search tests or assignments"></div>
+    </div>
+    <div class="tabs-row" id="test-subject-tabs"></div>
+    <div id="test-entries"></div>
+  </section>
+
+  <!-- GRADES -->
+  <section id="view-grades" class="view">
+    <div class="panel" style="padding:1.25rem 1.5rem;">
+      <h2 style="margin:0;">Current grades</h2>
+      <p style="font-size:13px; color:var(--text-2); margin:6px 0 0;">Type in your current grade for each class — whatever you're seeing in the gradebook.</p>
+    </div>
+    <div id="grade-cards"></div>
+  </section>
+
+  <!-- CALENDAR -->
+  <section id="view-calendar" class="view">
+    <div class="panel">
+      <div class="cal-header">
+        <div class="cal-title" id="cal-title">Month Year</div>
+        <div class="cal-nav">
+          <button id="cal-prev" aria-label="Previous month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+          <button id="cal-today" style="width:auto; padding:0 12px; font-size:12.5px; font-weight:600;">Today</button>
+          <button id="cal-next" aria-label="Next month"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+        </div>
+      </div>
+      <div class="cal-grid" id="cal-dow-row"></div>
+      <div class="cal-grid" id="cal-grid" style="margin-top:6px;"></div>
+      <div class="day-detail" id="day-detail" style="display:none;">
+        <h3 id="day-detail-title">Selected day</h3>
+        <div id="day-detail-body"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MY CLASSES -->
+  <section id="view-classes" class="view">
+    <div class="panel">
+      <h2>Your class schedule</h2>
+      <p class="hint">Enter the name of each class for your school's periods. Bell times (below each period) are fixed to your school's schedule and stay the same for everyone — only the class names are yours to set.</p>
+      <div id="class-rows"></div>
+      <div style="margin-top:1.25rem; display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="primary" id="btn-save-classes">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          Save classes
+        </button>
+        <span id="save-confirm" style="display:none; align-self:center; font-size:13px; color: var(--good); font-weight:600;">Saved</span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>Saved only in this browser, on this device.</footer>
+
+<script>
+(function(){
+  const HW_KEY = 'coursework-catalog-entries';
+  const TESTS_KEY = 'planner-tests';
+  const CLASSES_KEY = 'planner-class-names';
+  const GRADEVALS_KEY = 'planner-grade-values';
+  const COLORS = ['#7C6FF0','#14B8A6','#F97066','#F5A524','#3B82F6','#EC4899'];
+  const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  // Periods that are actual classes (period 4 is reserved for Lunch on the
+  // days it appears and is not user-editable). This list, and all the bell
+  // times below, are the fixed school schedule shared by every user.
+  const PERIOD_LIST = [1,2,3,5,6,7,8];
+
+  const DEFAULT_PERIODS = {
+    Mon: [{p:1,start:'07:45',end:'08:35'},{p:2,start:'08:41',end:'09:34'},{p:3,start:'09:40',end:'10:30'},{p:5,start:'11:32',end:'12:22'},{p:6,start:'12:28',end:'13:18'},{p:7,start:'13:24',end:'14:14'},{p:8,start:'14:20',end:'15:10'}],
+    Tue: [{p:1,start:'07:45',end:'08:30'},{p:2,start:'08:35',end:'09:20'},{p:3,start:'10:15',end:'11:00'},{p:5,start:'11:55',end:'12:40'},{p:6,start:'12:45',end:'13:30'},{p:7,start:'13:35',end:'14:20'},{p:8,start:'14:25',end:'15:10'}],
+    Wed: [{p:1,start:'09:00',end:'09:42'},{p:2,start:'09:47',end:'10:29'},{p:3,start:'10:34',end:'11:16'},{p:5,start:'12:08',end:'12:49'},{p:6,start:'12:54',end:'13:36'},{p:7,start:'13:41',end:'14:23'},{p:8,start:'14:28',end:'15:10'}],
+    Thu: [{p:1,start:'07:45',end:'08:30'},{p:2,start:'08:35',end:'09:20'},{p:3,start:'10:15',end:'11:00'},{p:5,start:'11:55',end:'12:40'},{p:6,start:'12:45',end:'13:30'},{p:7,start:'13:35',end:'14:20'},{p:8,start:'14:25',end:'15:10'}],
+    Fri: [{p:1,start:'07:45',end:'08:35'},{p:2,start:'08:41',end:'09:34'},{p:3,start:'09:40',end:'10:30'},{p:5,start:'11:32',end:'12:22'},{p:6,start:'12:28',end:'13:18'},{p:7,start:'13:24',end:'14:14'},{p:8,start:'14:20',end:'15:10'}]
+  };
+  const ALL_PERIODS = {
+    Mon: [...DEFAULT_PERIODS.Mon.slice(0,3), {p:4,start:'10:36',end:'11:26'}, ...DEFAULT_PERIODS.Mon.slice(3)],
+    Tue: [...DEFAULT_PERIODS.Tue.slice(0,2), {p:4,start:'11:05',end:'11:50'}, ...DEFAULT_PERIODS.Tue.slice(2)],
+    Wed: [...DEFAULT_PERIODS.Wed.slice(0,3), {p:4,start:'11:21',end:'12:03'}, ...DEFAULT_PERIODS.Wed.slice(3)],
+    Thu: [...DEFAULT_PERIODS.Thu.slice(0,2), {p:4,start:'11:05',end:'11:50'}, ...DEFAULT_PERIODS.Thu.slice(2)],
+    Fri: [...DEFAULT_PERIODS.Fri.slice(0,3), {p:4,start:'10:36',end:'11:26'}, ...DEFAULT_PERIODS.Fri.slice(3)]
+  };
+  Object.values(ALL_PERIODS).forEach(list => list.sort((a,b) => a.start.localeCompare(b.start)));
+
+  let entries = [], tests = [], classNames = {}, gradeValues = {};
+  let activePeriod = '', activeTestPeriod = '';
+  let calYear, calMonth, selectedDateStr = null;
+
+  function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+  function fmtDate(d){ const dt = new Date(d + 'T00:00:00'); if (isNaN(dt)) return d; return dt.toLocaleDateString(undefined, { weekday:'short', month:'short', day:'numeric' }); }
+  function colorForPeriod(period){ return COLORS[Math.abs(period * 37 + 11) % COLORS.length]; }
+  function fmtTime(t){ if (!t) return ''; const [h,m] = t.split(':').map(Number); const period = h >= 12 ? 'PM' : 'AM'; const h12 = h % 12 === 0 ? 12 : h % 12; return `${h12}:${String(m).padStart(2,'0')} ${period}`; }
+  function dayNameForDate(dateStr){ const dt = new Date(dateStr + 'T00:00:00'); return DAYS[(dt.getDay() + 6) % 7]; }
+  function periodLabelText(period){ return `Period ${period}`; }
+  function className(period){ const n = classNames[period]; return (n && n.trim()) ? n.trim() : `Period ${period} class`; }
+  function hasCustomClasses(){ return PERIOD_LIST.some(p => classNames[p] && classNames[p].trim()); }
+
+  function loadAll(){
+    try { entries = JSON.parse(localStorage.getItem(HW_KEY)) || []; } catch(e){ entries = []; }
+    try { tests = JSON.parse(localStorage.getItem(TESTS_KEY)) || []; } catch(e){ tests = []; }
+    try { classNames = JSON.parse(localStorage.getItem(CLASSES_KEY)) || {}; } catch(e){ classNames = {}; }
+    try { gradeValues = JSON.parse(localStorage.getItem(GRADEVALS_KEY)) || {}; } catch(e){ gradeValues = {}; }
+  }
+  function saveHw(){ try { localStorage.setItem(HW_KEY, JSON.stringify(entries)); } catch(e){} }
+  function saveTests(){ try { localStorage.setItem(TESTS_KEY, JSON.stringify(tests)); } catch(e){} }
+  function saveClassNames(){ try { localStorage.setItem(CLASSES_KEY, JSON.stringify(classNames)); } catch(e){} }
+  function saveGradeValues(){ try { localStorage.setItem(GRADEVALS_KEY, JSON.stringify(gradeValues)); } catch(e){} }
+
+  function populateSelect(sel){
+    sel.innerHTML = PERIOD_LIST.map(p => `<option value="${p}">Period ${p}: ${escapeHtml(className(p))}</option>`).join('');
+  }
+
+  function refreshEverything(){
+    populateSelect(subjectEl); populateSelect(tSubjectEl);
+    renderHomework(); renderTests(); renderToday(); renderGrades(); renderCalendar();
+    updateSetupBanner();
+  }
+
+  function updateSetupBanner(){
+    document.getElementById('setup-banner').style.display = hasCustomClasses() ? 'none' : 'flex';
+  }
+  document.getElementById('setup-banner-btn').addEventListener('click', () => {
+    document.querySelector('.tab-btn[data-view="classes"]').click();
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('view-' + btn.getAttribute('data-view')).classList.add('active');
+      const v = btn.getAttribute('data-view');
+      if (v === 'calendar') renderCalendar();
+      if (v === 'today') renderToday();
+      if (v === 'grades') renderGrades();
+      if (v === 'tests') renderTests();
+      if (v === 'classes') renderClassRows();
+    });
+  });
+
+  const subjectEl = document.getElementById('f-subject');
+  const hwEl = document.getElementById('f-homework');
+  const dueEl = document.getElementById('f-due');
+  const notesEl = document.getElementById('f-notes');
+  const errEl = document.getElementById('f-error');
+  const searchEl = document.getElementById('f-search');
+  const tabsEl = document.getElementById('subject-tabs');
+  const entriesEl = document.getElementById('entries');
+  const statTotal = document.getElementById('stat-total');
+  const statDue = document.getElementById('stat-due');
+  const statWeek = document.getElementById('stat-week');
+
+  function renderStats(){
+    statTotal.textContent = entries.length;
+    statDue.textContent = entries.filter(e => !e.done).length;
+    const weekAgo = Date.now() - 7*24*60*60*1000;
+    statWeek.textContent = entries.filter(e => e.addedAt && e.addedAt >= weekAgo).length;
+  }
+  function renderSubjectTabs(){
+    let html = `<button class="subject-tab ${activePeriod==='' ? 'active':''}" data-period="">All classes</button>`;
+    PERIOD_LIST.forEach(p => { html += `<button class="subject-tab ${String(activePeriod)===String(p) ? 'active':''}" data-period="${p}"><span class="dot" style="background:${colorForPeriod(p)}"></span>${escapeHtml(className(p))}</button>`; });
+    tabsEl.innerHTML = html;
+    tabsEl.querySelectorAll('.subject-tab').forEach(btn => btn.addEventListener('click', () => { activePeriod = btn.getAttribute('data-period'); renderHomework(); }));
+  }
+  function renderHomework(){
+    renderStats(); renderSubjectTabs();
+    const q = searchEl.value.trim().toLowerCase();
+    const todayStr = new Date().toISOString().slice(0,10);
+    let list = [...entries].sort((a,b) => (b.dueDate||'').localeCompare(a.dueDate||'') || (b.addedAt||0)-(a.addedAt||0));
+    list = list.filter(e => {
+      if (e.dueDate && e.dueDate < todayStr) return false;
+      if (activePeriod && String(e.period) !== String(activePeriod)) return false;
+      if (!q) return true;
+      return className(e.period).toLowerCase().includes(q) || (e.homework||'').toLowerCase().includes(q) || (e.notes||'').toLowerCase().includes(q);
+    });
+    if (list.length === 0){
+      entriesEl.innerHTML = `<div class="empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="14" x2="14" y2="14"/></svg><br>${entries.length === 0 ? 'No homework yet. Add your first item above.' : 'Nothing matches. Try a different search or class.'}</div>`;
+      return;
+    }
+    entriesEl.innerHTML = list.map(e => { const color = colorForPeriod(e.period); const isDone = !!e.done; return `
+      <div class="card ${isDone ? 'completed' : ''}" style="--dot:${color}">
+        <div class="card-head">
+          <div><p class="card-subject"><span class="dot" style="background:${color}"></span>${escapeHtml(className(e.period))}</p><p class="card-period">${periodLabelText(e.period)}</p></div>
+          <label class="done-toggle ${isDone ? 'is-done' : ''}">
+            <input type="checkbox" class="chk-done" data-id="${e.id}" ${isDone ? 'checked' : ''}>
+            <span class="check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            ${isDone ? 'Done' : 'Mark done'}
+          </label>
+        </div>
+        <div class="card-section"><p class="card-label">Homework</p><p class="card-text">${escapeHtml(e.homework)}</p>${e.dueDate ? `<span class="due-badge ${(!isDone && e.dueDate < todayStr) ? 'overdue' : ''}">Due ${fmtDate(e.dueDate)}</span>` : ''}</div>
+        ${e.notes ? `<div class="card-section"><p class="card-label">Notes</p><p class="card-text">${escapeHtml(e.notes)}</p></div>` : ''}
+        <div class="card-actions"><button class="btn-del" data-id="${e.id}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>Delete</button></div>
+      </div>`; }).join('');
+    entriesEl.querySelectorAll('.btn-del').forEach(btn => btn.addEventListener('click', () => { entries = entries.filter(e => e.id !== btn.getAttribute('data-id')); saveHw(); renderHomework(); }));
+    entriesEl.querySelectorAll('.chk-done').forEach(chk => chk.addEventListener('change', () => { const entry = entries.find(e => e.id === chk.getAttribute('data-id')); if (entry){ entry.done = chk.checked; saveHw(); renderHomework(); } }));
+  }
+  document.getElementById('btn-add').addEventListener('click', () => {
+    const period = Number(subjectEl.value), homework = hwEl.value.trim(), dueDate = dueEl.value, notes = notesEl.value.trim();
+    if (!homework){ errEl.textContent = "Enter what's due first."; errEl.style.display = 'block'; return; }
+    errEl.style.display = 'none';
+    entries.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), period, homework, dueDate, notes, done: false, addedAt: Date.now() });
+    saveHw(); hwEl.value = ''; dueEl.value = ''; notesEl.value = ''; renderHomework();
+  });
+  hwEl.addEventListener('input', () => { errEl.style.display = 'none'; });
+  searchEl.addEventListener('input', renderHomework);
+
+  const tSubjectEl = document.getElementById('t-subject');
+  const tTitleEl = document.getElementById('t-title');
+  const tDueEl = document.getElementById('t-due');
+  const tNotesEl = document.getElementById('t-notes');
+  const tErrEl = document.getElementById('t-error');
+  const tSearchEl = document.getElementById('t-search');
+  const tTabsEl = document.getElementById('test-subject-tabs');
+  const testEntriesEl = document.getElementById('test-entries');
+
+  function renderTestTabs(){
+    let html = `<button class="subject-tab ${activeTestPeriod==='' ? 'active':''}" data-period="">All classes</button>`;
+    PERIOD_LIST.forEach(p => { html += `<button class="subject-tab ${String(activeTestPeriod)===String(p) ? 'active':''}" data-period="${p}"><span class="dot" style="background:${colorForPeriod(p)}"></span>${escapeHtml(className(p))}</button>`; });
+    tTabsEl.innerHTML = html;
+    tTabsEl.querySelectorAll('.subject-tab').forEach(btn => btn.addEventListener('click', () => { activeTestPeriod = btn.getAttribute('data-period'); renderTests(); }));
+  }
+  function renderTests(){
+    renderTestTabs();
+    const q = tSearchEl.value.trim().toLowerCase();
+    const todayStr = new Date().toISOString().slice(0,10);
+    let list = [...tests].sort((a,b) => (b.dueDate||'').localeCompare(a.dueDate||'') || (b.addedAt||0)-(a.addedAt||0));
+    list = list.filter(t => {
+      if (t.done && t.dueDate && t.dueDate < todayStr) return false;
+      if (activeTestPeriod && String(t.period) !== String(activeTestPeriod)) return false;
+      if (!q) return true;
+      return className(t.period).toLowerCase().includes(q) || (t.title||'').toLowerCase().includes(q) || (t.notes||'').toLowerCase().includes(q);
+    });
+    if (list.length === 0){
+      testEntriesEl.innerHTML = `<div class="empty"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg><br>${tests.length === 0 ? 'No tests or assignments logged yet.' : 'Nothing matches. Try a different search or class.'}</div>`;
+      return;
+    }
+    testEntriesEl.innerHTML = list.map(t => { const color = colorForPeriod(t.period); const isDone = !!t.done; return `
+      <div class="card ${isDone ? 'completed' : ''}" style="--dot:${color}">
+        <div class="card-head">
+          <div><p class="card-subject"><span class="dot" style="background:${color}"></span>${escapeHtml(className(t.period))}</p><p class="card-period">${periodLabelText(t.period)}</p></div>
+          <label class="done-toggle ${isDone ? 'is-done' : ''}">
+            <input type="checkbox" class="chk-test-done" data-id="${t.id}" ${isDone ? 'checked' : ''}>
+            <span class="check"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></span>
+            ${isDone ? 'Done' : 'Mark done'}
+          </label>
+        </div>
+        <div class="card-section"><p class="card-label">${escapeHtml(t.title)}</p>${t.dueDate ? `<span class="due-badge ${(!isDone && t.dueDate < todayStr) ? 'overdue' : ''}">${fmtDate(t.dueDate)}</span>` : ''}</div>
+        ${t.notes ? `<div class="card-section"><p class="card-label">Notes</p><p class="card-text">${escapeHtml(t.notes)}</p></div>` : ''}
+        <div class="card-actions"><button class="btn-del" data-id="${t.id}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>Delete</button></div>
+      </div>`; }).join('');
+    testEntriesEl.querySelectorAll('.btn-del').forEach(btn => btn.addEventListener('click', () => { tests = tests.filter(t => t.id !== btn.getAttribute('data-id')); saveTests(); renderTests(); }));
+    testEntriesEl.querySelectorAll('.chk-test-done').forEach(chk => chk.addEventListener('change', () => { const t = tests.find(t => t.id === chk.getAttribute('data-id')); if (t){ t.done = chk.checked; saveTests(); renderTests(); } }));
+  }
+  document.getElementById('btn-add-test').addEventListener('click', () => {
+    const period = Number(tSubjectEl.value), title = tTitleEl.value.trim(), dueDate = tDueEl.value, notes = tNotesEl.value.trim();
+    if (!title){ tErrEl.textContent = 'Enter a test or assignment name first.'; tErrEl.style.display = 'block'; return; }
+    tErrEl.style.display = 'none';
+    tests.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), period, title, dueDate, notes, done:false, addedAt: Date.now() });
+    saveTests(); tTitleEl.value = ''; tDueEl.value = ''; tNotesEl.value = ''; renderTests();
+  });
+  tTitleEl.addEventListener('input', () => { tErrEl.style.display = 'none'; });
+  tSearchEl.addEventListener('input', renderTests);
+
+  const liveStatusEl = document.getElementById('live-status');
+
+  function periodLabelFor(p){
+    if (p === 4) return 'Lunch';
+    return className(p);
+  }
+  function formatCountdown(ms){
+    const totalSec = Math.max(0, Math.floor(ms/1000));
+    const h = Math.floor(totalSec/3600), m = Math.floor((totalSec%3600)/60), s = totalSec%60;
+    if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+    return `${m}m ${String(s).padStart(2,'0')}s`;
+  }
+  function getLiveStatus(now){
+    for (let dayOffset=0; dayOffset<8; dayOffset++){
+      const d = new Date(now); d.setDate(d.getDate()+dayOffset);
+      const dayName = DAYS[(d.getDay()+6)%7];
+      const periods = ALL_PERIODS[dayName];
+      if (!periods) continue;
+      for (const item of periods){
+        const startDate = new Date(d); const [sh,sm] = item.start.split(':').map(Number); startDate.setHours(sh,sm,0,0);
+        const endDate = new Date(d); const [eh,em] = item.end.split(':').map(Number); endDate.setHours(eh,em,0,0);
+        if (dayOffset === 0 && now >= startDate && now < endDate){
+          return { type:'in-period', period:item.p, label: periodLabelFor(item.p), endsAt: endDate, day: dayName };
+        }
+        if (startDate > now){
+          return { type:'upcoming', period:item.p, label: periodLabelFor(item.p), startsAt: startDate, isToday: dayOffset===0, day: dayName };
+        }
+      }
+    }
+    return { type:'none' };
+  }
+  function updateLiveStatus(){
+    if (!liveStatusEl) return;
+    const status = getLiveStatus(new Date());
+    liveStatusEl.classList.remove('status-green','status-yellow','status-red');
+    if (status.type === 'in-period'){
+      const remainMs = status.endsAt - new Date();
+      const remainMin = remainMs / 60000;
+      liveStatusEl.classList.add(remainMin > 15 ? 'status-green' : remainMin > 5 ? 'status-yellow' : 'status-red');
+      liveStatusEl.innerHTML = `<div class="ls-main">Right now: ${status.period === 4 ? 'Lunch' : 'Period ' + status.period + ' · ' + escapeHtml(status.label)}<span class="ls-sub">Ends at ${status.endsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div><div class="ls-time">${formatCountdown(remainMs)} left</div>`;
+    } else if (status.type === 'upcoming'){
+      const nextLabel = status.period === 4 ? 'Lunch' : `Period ${status.period} · ${escapeHtml(status.label)}`;
+      if (status.isToday){
+        liveStatusEl.innerHTML = `<div class="ls-main">Next up: ${nextLabel}<span class="ls-sub">Starts at ${status.startsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div><div class="ls-time">${formatCountdown(status.startsAt - new Date())}</div>`;
+      } else {
+        liveStatusEl.innerHTML = `<div class="ls-main">Next up: ${nextLabel}<span class="ls-sub">${status.startsAt.toLocaleDateString(undefined,{weekday:'long'})} at ${status.startsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div>`;
+      }
+    } else {
+      liveStatusEl.innerHTML = `<div class="ls-main">No upcoming classes found.</div>`;
+    }
+  }
+  setInterval(updateLiveStatus, 1000);
+
+  // Derives the day's class list on the fly from the fixed bell schedule —
+  // nothing about it is stored, so renaming a class instantly updates it.
+  function classesForDay(dayName){
+    const periods = DEFAULT_PERIODS[dayName] || [];
+    return periods.map(item => ({ period: item.p, start: item.start, end: item.end }));
+  }
+
+  function renderToday(){
+    updateLiveStatus();
+    updateSetupBanner();
+    const todayName = DAYS[(new Date().getDay() + 6) % 7];
+    const todayStr = new Date().toISOString().slice(0,10);
+    const status = getLiveStatus(new Date());
+    const nowPeriod = status.type === 'in-period' ? status.period : null;
+
+    const classesToday = classesForDay(todayName);
+    const classesEl = document.getElementById('today-classes');
+    if (classesToday.length === 0){
+      classesEl.innerHTML = `<div class="today-empty">No classes today.</div>`;
+    } else {
+      classesEl.innerHTML = classesToday.map(c => { const color = colorForPeriod(c.period); const isNow = c.period === nowPeriod; return `
+        <div class="today-row ${isNow ? 'is-now' : ''}">
+          <span class="dot" style="background:${color}"></span>
+          <span class="trow-main">Period ${c.period} · ${escapeHtml(className(c.period))}</span>
+          <span class="trow-sub">${isNow ? 'now' : fmtTime(c.start)}</span>
+        </div>`; }).join('');
+    }
+
+    const hwToday = entries.filter(e => e.dueDate === todayStr);
+    const hwTodayEl = document.getElementById('today-homework');
+    if (hwToday.length === 0){
+      hwTodayEl.innerHTML = `<div class="today-empty">Nothing due today.</div>`;
+    } else {
+      hwTodayEl.innerHTML = hwToday.map(e => { const color = colorForPeriod(e.period); return `
+        <div class="today-row">
+          <span class="dot" style="background:${color}"></span>
+          <div><p class="trow-main" style="margin:0;">${escapeHtml(className(e.period))}</p><p class="trow-sub" style="margin:2px 0 0;">${escapeHtml(e.homework)}</p></div>
+        </div>`; }).join('');
+    }
+
+    const testsToday = tests.filter(t => t.dueDate === todayStr);
+    const testsTodayEl = document.getElementById('today-tests');
+    if (testsToday.length === 0){
+      testsTodayEl.innerHTML = `<div class="today-empty">No tests today.</div>`;
+    } else {
+      testsTodayEl.innerHTML = testsToday.map(t => { const color = colorForPeriod(t.period); return `
+        <div class="today-row">
+          <span class="dot" style="background:${color}"></span>
+          <div><p class="trow-main" style="margin:0;">${escapeHtml(className(t.period))}</p><p class="trow-sub" style="margin:2px 0 0;">${escapeHtml(t.title)}</p></div>
+        </div>`; }).join('');
+    }
+  }
+
+  const gradeCardsEl = document.getElementById('grade-cards');
+  function renderGrades(){
+    gradeCardsEl.innerHTML = PERIOD_LIST.map(p => { const color = colorForPeriod(p); const val = gradeValues[p] || ''; return `
+      <div class="grade-card" style="--dot:${color}">
+        <div class="grade-left"><span class="dot" style="background:${color}"></span><div><div class="grade-name">${escapeHtml(className(p))}</div><div class="grade-period">Period ${p}</div></div></div>
+        <div class="grade-input-wrap"><input type="text" class="grade-input" data-period="${p}" value="${escapeHtml(val)}" placeholder="e.g. 94% or A-"></div>
+      </div>`; }).join('');
+    gradeCardsEl.querySelectorAll('.grade-input').forEach(inp => {
+      inp.addEventListener('input', () => { gradeValues[inp.getAttribute('data-period')] = inp.value; saveGradeValues(); });
+    });
+  }
+
+  const classRowsEl = document.getElementById('class-rows');
+  function renderClassRows(){
+    classRowsEl.innerHTML = PERIOD_LIST.map(p => {
+      const color = colorForPeriod(p);
+      const mon = (DEFAULT_PERIODS.Mon || []).find(it => it.p === p);
+      const timeHint = mon ? `Mon ${fmtTime(mon.start)}–${fmtTime(mon.end)}` : '';
+      return `
+      <div class="class-row">
+        <div class="cr-period"><span class="dot" style="background:${color}"></span><span class="cr-period-num">Period ${p}</span><div class="cr-time">${timeHint}</div></div>
+        <input type="text" class="class-name-input" data-period="${p}" value="${escapeHtml(classNames[p] || '')}" placeholder="e.g. Algebra II">
+      </div>`;
+    }).join('');
+  }
+  document.getElementById('btn-save-classes').addEventListener('click', () => {
+    classRowsEl.querySelectorAll('.class-name-input').forEach(inp => {
+      classNames[inp.getAttribute('data-period')] = inp.value.trim();
+    });
+    saveClassNames();
+    refreshEverything();
+    renderClassRows();
+    const confirm = document.getElementById('save-confirm');
+    confirm.style.display = 'inline';
+    setTimeout(() => { confirm.style.display = 'none'; }, 2000);
+  });
+
+  const calTitle = document.getElementById('cal-title');
+  const calDowRow = document.getElementById('cal-dow-row');
+  const calGridEl = document.getElementById('cal-grid');
+  const dayDetail = document.getElementById('day-detail');
+  const dayDetailTitle = document.getElementById('day-detail-title');
+  const dayDetailBody = document.getElementById('day-detail-body');
+  const now = new Date();
+  calYear = now.getFullYear(); calMonth = now.getMonth();
+  calDowRow.innerHTML = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  function itemsForDate(dateStr){
+    const dayName = dayNameForDate(dateStr);
+    const hw = entries.filter(e => e.dueDate === dateStr);
+    const testsToday = tests.filter(t => t.dueDate === dateStr);
+    const classes = classesForDay(dayName);
+    return { hw, testsToday, classes };
+  }
+  function renderCalendar(){
+    const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    calTitle.textContent = `${monthNames[calMonth]} ${calYear}`;
+    const firstOfMonth = new Date(calYear, calMonth, 1);
+    const startOffset = (firstOfMonth.getDay() + 6) % 7;
+    const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+    const todayStr = new Date().toISOString().slice(0,10);
+    let cells = '';
+    for (let i=0;i<startOffset;i++) cells += `<div class="cal-cell empty-cell"></div>`;
+    for (let d=1; d<=daysInMonth; d++){
+      const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      const { hw, testsToday, classes } = itemsForDate(dateStr);
+      const dots = [];
+      hw.slice(0,4).forEach(e => dots.push(colorForPeriod(e.period)));
+      testsToday.slice(0, Math.max(0,4-dots.length)).forEach(t => dots.push(colorForPeriod(t.period)));
+      const total = hw.length + testsToday.length;
+      const overflow = total - dots.length;
+      cells += `<div class="cal-cell ${dateStr===todayStr ? 'is-today' : ''} ${dateStr===selectedDateStr ? 'is-selected' : ''}" data-date="${dateStr}">
+        <div class="cal-daynum">${d}</div>
+        <div class="cal-dots">${dots.map(c => `<span class="cal-dot" style="background:${c}"></span>`).join('')}</div>
+        ${overflow > 0 ? `<div class="cal-more">+${overflow}</div>` : ''}
+      </div>`;
+    }
+    calGridEl.innerHTML = cells;
+    calGridEl.querySelectorAll('.cal-cell[data-date]').forEach(cell => cell.addEventListener('click', () => { selectedDateStr = cell.getAttribute('data-date'); renderCalendar(); showDayDetail(selectedDateStr); }));
+  }
+  function showDayDetail(dateStr){
+    dayDetail.style.display = 'block';
+    dayDetailTitle.textContent = fmtDate(dateStr);
+    const { hw, testsToday, classes } = itemsForDate(dateStr);
+    let html = '';
+    html += `<p class="detail-group-label">Classes</p>`;
+    if (classes.length === 0) html += `<p class="detail-empty">No classes.</p>`;
+    else classes.forEach(c => { const color = colorForPeriod(c.period); html += `<div class="detail-item"><span class="dot" style="background:${color}"></span><span>Period ${c.period}: ${escapeHtml(className(c.period))} · ${fmtTime(c.start)}–${fmtTime(c.end)}</span></div>`; });
+    html += `<p class="detail-group-label">Homework due</p>`;
+    if (hw.length === 0) html += `<p class="detail-empty">Nothing due.</p>`;
+    else hw.forEach(e => { const color = colorForPeriod(e.period); html += `<div class="detail-item"><span class="dot" style="background:${color}"></span><span><strong>${escapeHtml(className(e.period))}</strong>${e.done ? ' (done)' : ''}: ${escapeHtml(e.homework)}</span></div>`; });
+    html += `<p class="detail-group-label">Tests / assignments</p>`;
+    if (testsToday.length === 0) html += `<p class="detail-empty">None.</p>`;
+    else testsToday.forEach(t => { const color = colorForPeriod(t.period); html += `<div class="detail-item"><span class="dot" style="background:${color}"></span><span><strong>${escapeHtml(className(t.period))}</strong>${t.done ? ' (done)' : ''}: ${escapeHtml(t.title)}</span></div>`; });
+    dayDetailBody.innerHTML = html;
+  }
+  document.getElementById('cal-prev').addEventListener('click', () => { calMonth--; if (calMonth < 0){ calMonth = 11; calYear--; } renderCalendar(); });
+  document.getElementById('cal-next').addEventListener('click', () => { calMonth++; if (calMonth > 11){ calMonth = 0; calYear++; } renderCalendar(); });
+  document.getElementById('cal-today').addEventListener('click', () => { const n = new Date(); calYear = n.getFullYear(); calMonth = n.getMonth(); renderCalendar(); });
+
+  loadAll();
+  dueEl.value = '';
+  populateSelect(subjectEl);
+  populateSelect(tSubjectEl);
+  renderHomework();
+  renderTests();
+  renderToday();
+  renderGrades();
+  renderCalendar();
+  renderClassRows();
+  updateLiveStatus();
+  updateSetupBanner();
+})();
+</script>
+
+</body>
+</html>
+
+On Mon, Sep 14, 2026 at 11:42 AM Rohan Patwardhan <rhpatwardhan@stu.naperville203.org> wrote:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HW Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F6F6FB; --surface: #FFFFFF; --surface-2: #FBFBFE;
+    --text: #16161F; --text-2: #6C6C80; --text-3: #9B9BAC;
+    --border: #E7E7F1; --border-strong: #D6D6E6;
+    --accent: #5B5BD6; --accent-hover: #4949BE; --accent-bg: #EFEFFC;
+    --danger: #E5484D; --danger-bg: #FDEDED;
+    --good: #1B9E5B; --good-bg: #EAFBF3;
+    --radius-lg: 18px; --radius-md: 12px; --radius-sm: 8px;
+    --shadow-card: 0 1px 2px rgba(20,20,40,0.04), 0 8px 24px rgba(20,20,40,0.06);
+    --shadow-hover: 0 4px 8px rgba(20,20,40,0.05), 0 16px 32px rgba(20,20,40,0.09);
+    --shadow-focus: 0 0 0 3px rgba(91,91,214,0.22);
+  }
+  *{ box-sizing:border-box; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.01ms !important; transition-duration:.01ms !important; } }
+  body{ margin:0; background: var(--bg); color: var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; }
+  .wrap{ max-width: 1040px; margin:0 auto; padding: 0 1.5rem 5rem; }
+  header{ padding: 3rem 0 1.5rem; }
+  .eyebrow{ display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; letter-spacing:0.02em; color: var(--accent); background: var(--accent-bg); padding: 5px 12px; border-radius: 999px; margin-bottom: 1rem; }
+  h1{ font-family:'Sora', sans-serif; font-weight:700; font-size: clamp(28px, 4.5vw, 38px); letter-spacing:-0.02em; margin: 0 0 0.5rem; }
+
+  .tabbar{ display:flex; gap:4px; background: var(--surface); border:1px solid var(--border); border-radius: 14px; padding:4px; margin-bottom:2rem; overflow-x:auto; }
+  .tab-btn{ flex:1; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:7px; font-family:'Inter', sans-serif; font-size:13.5px; font-weight:600; color: var(--text-2); background:transparent; border:none; border-radius:10px; padding:10px 12px; cursor:pointer; transition: all .13s ease; }
+  .tab-btn.active{ background: var(--text); color:#fff; }
+  .tab-btn:hover:not(.active){ background: var(--surface-2); color: var(--text); }
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  .stats{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin: 0 0 2rem; }
+  .stat{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.1rem; }
+  .stat-num{ font-family:'Sora', sans-serif; font-weight:700; font-size:24px; letter-spacing:-0.01em; }
+  .stat-label{ font-size:12.5px; color: var(--text-2); margin-top:2px; }
+
+  .panel{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 1.75rem; margin-bottom: 2.25rem; }
+  .panel h2{ font-family:'Sora', sans-serif; font-size:16px; font-weight:600; margin:0 0 1.25rem; }
   .field-row{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px; }
   .field{ margin-bottom:14px; }
   label{ display:block; font-size:13px; font-weight:500; color: var(--text-2); margin-bottom:6px; }
