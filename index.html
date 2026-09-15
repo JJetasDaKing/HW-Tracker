@@ -4,9 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>HW Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg: #F6F6FB; --surface: #FFFFFF; --surface-2: #FBFBFE;
@@ -19,17 +16,27 @@
     --shadow-card: 0 1px 2px rgba(20,20,40,0.04), 0 8px 24px rgba(20,20,40,0.06);
     --shadow-hover: 0 4px 8px rgba(20,20,40,0.05), 0 16px 32px rgba(20,20,40,0.09);
     --shadow-focus: 0 0 0 3px rgba(91,91,214,0.22);
+    --font-heading: -apple-system, "Segoe UI", "SF Pro Display", system-ui, sans-serif;
+    --font-body: -apple-system, "Segoe UI", Roboto, system-ui, sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
   }
   *{ box-sizing:border-box; }
   @media (prefers-reduced-motion: reduce){ *{ animation-duration:.01ms !important; transition-duration:.01ms !important; } }
-  body{ margin:0; background: var(--bg); color: var(--text); font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif; min-height:100vh; -webkit-font-smoothing:antialiased; }
+  body{ margin:0; background: var(--bg); color: var(--text); font-family: var(--font-body); min-height:100vh; -webkit-font-smoothing:antialiased; }
   .wrap{ max-width: 1040px; margin:0 auto; padding: 0 1.5rem 5rem; }
   header{ padding: 3rem 0 1.5rem; }
   .eyebrow{ display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:600; letter-spacing:0.02em; color: var(--accent); background: var(--accent-bg); padding: 5px 12px; border-radius: 999px; margin-bottom: 1rem; }
-  h1{ font-family:'Sora', sans-serif; font-weight:700; font-size: clamp(28px, 4.5vw, 38px); letter-spacing:-0.02em; margin: 0 0 0.5rem; }
+  h1{ font-family: var(--font-heading); font-weight:700; font-size: clamp(28px, 4.5vw, 38px); letter-spacing:-0.02em; margin: 0 0 0.5rem; }
+
+  .setup-screen{ display:flex; align-items:center; justify-content:center; min-height:80vh; padding: 2rem 0; }
+  .setup-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 2.25rem; max-width: 560px; width:100%; }
+  .setup-card h2{ font-family: var(--font-heading); font-weight:700; font-size:24px; letter-spacing:-0.01em; margin: 0.75rem 0 0.5rem; }
+  .setup-sub{ font-size:14px; color: var(--text-2); line-height:1.55; margin: 0 0 1.5rem; }
+  .setup-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom: 1.25rem; }
+  .setup-field label{ display:block; font-size:12.5px; font-weight:600; color: var(--text-2); margin-bottom:5px; }
 
   .tabbar{ display:flex; gap:4px; background: var(--surface); border:1px solid var(--border); border-radius: 14px; padding:4px; margin-bottom:2rem; overflow-x:auto; }
-  .tab-btn{ flex:1; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:7px; font-family:'Inter', sans-serif; font-size:13.5px; font-weight:600; color: var(--text-2); background:transparent; border:none; border-radius:10px; padding:10px 12px; cursor:pointer; transition: all .13s ease; }
+  .tab-btn{ flex:1; white-space:nowrap; display:inline-flex; align-items:center; justify-content:center; gap:7px; font-family: var(--font-body); font-size:13.5px; font-weight:600; color: var(--text-2); background:transparent; border:none; border-radius:10px; padding:10px 12px; cursor:pointer; transition: all .13s ease; }
   .tab-btn.active{ background: var(--text); color:#fff; }
   .tab-btn:hover:not(.active){ background: var(--surface-2); color: var(--text); }
   .view{ display:none; }
@@ -37,34 +44,36 @@
 
   .stats{ display:grid; grid-template-columns: repeat(3, 1fr); gap:12px; margin: 0 0 2rem; }
   .stat{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding: 1rem 1.1rem; }
-  .stat-num{ font-family:'Sora', sans-serif; font-weight:700; font-size:24px; letter-spacing:-0.01em; }
+  .stat-num{ font-family: var(--font-heading); font-weight:700; font-size:24px; letter-spacing:-0.01em; }
   .stat-label{ font-size:12.5px; color: var(--text-2); margin-top:2px; }
 
   .panel{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 1.75rem; margin-bottom: 2.25rem; }
-  .panel h2{ font-family:'Sora', sans-serif; font-size:16px; font-weight:600; margin:0 0 1.25rem; }
+  .panel h2{ font-family: var(--font-heading); font-size:16px; font-weight:600; margin:0 0 1.25rem; }
   .field-row{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-bottom:14px; }
   .field{ margin-bottom:14px; }
   label{ display:block; font-size:13px; font-weight:500; color: var(--text-2); margin-bottom:6px; }
   input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea, select{
-    width:100%; font-family:'Inter', sans-serif; font-size:14.5px; color:var(--text);
+    width:100%; font-family: var(--font-body); font-size:14.5px; color:var(--text);
     background: var(--surface-2); border:1px solid var(--border-strong); border-radius: var(--radius-sm);
     padding:10px 12px; transition: box-shadow .12s ease, border-color .12s ease; appearance:none;
   }
   select{ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236C6C80' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:34px; }
-  textarea{ min-height:78px; resize:vertical; line-height:1.55; font-family:'Inter',sans-serif; }
+  textarea{ min-height:78px; resize:vertical; line-height:1.55; font-family: var(--font-body); }
   input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible{ outline:none; border-color: var(--accent); box-shadow: var(--shadow-focus); }
   .error-msg{ display:none; font-size:13px; color: var(--danger); margin: -4px 0 12px; font-weight:500; }
 
-  button.primary{ display:inline-flex; align-items:center; gap:8px; font-family:'Inter', sans-serif; font-size:14px; font-weight:600; background: var(--accent); color:#fff; border:none; border-radius: var(--radius-sm); padding: 11px 18px; cursor:pointer; transition: background .12s ease, transform .08s ease; }
+  button.primary{ display:inline-flex; align-items:center; gap:8px; font-family: var(--font-body); font-size:14px; font-weight:600; background: var(--accent); color:#fff; border:none; border-radius: var(--radius-sm); padding: 11px 18px; cursor:pointer; transition: background .12s ease, transform .08s ease; }
   button.primary:hover{ background: var(--accent-hover); }
   button.primary:active{ transform: scale(0.98); }
+  button.secondary{ display:inline-flex; align-items:center; gap:6px; font-family: var(--font-body); font-size:13px; font-weight:600; background: var(--surface-2); color: var(--text); border:1px solid var(--border-strong); border-radius: var(--radius-sm); padding: 8px 14px; cursor:pointer; }
+  button.secondary:hover{ border-color: var(--text-2); }
 
   .controls{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:1.1rem; }
   .search-wrap{ position:relative; flex:1; min-width:220px; }
   .search-wrap svg{ position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--text-3); }
   .search-wrap input{ padding-left:36px; background:var(--surface); }
   .tabs-row{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:1.75rem; }
-  .subject-tab{ display:inline-flex; align-items:center; gap:7px; font-family:'Inter', sans-serif; font-size:13px; font-weight:500; padding: 7px 14px; border-radius:999px; border:1px solid var(--border-strong); background: var(--surface); color: var(--text-2); cursor:pointer; transition: all .12s ease; }
+  .subject-tab{ display:inline-flex; align-items:center; gap:7px; font-family: var(--font-body); font-size:13px; font-weight:500; padding: 7px 14px; border-radius:999px; border:1px solid var(--border-strong); background: var(--surface); color: var(--text-2); cursor:pointer; transition: all .12s ease; }
   .subject-tab .dot{ width:7px; height:7px; border-radius:50%; background: var(--text-3); }
   .subject-tab.active{ background: var(--text); color:#fff; border-color: var(--text); }
   .subject-tab.active .dot{ background:#fff; }
@@ -75,11 +84,10 @@
   .card::before{ content:''; position:absolute; left:0; top:1.1rem; bottom:1.1rem; width:3px; border-radius: 3px; background: var(--dot, var(--accent)); }
   .card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-hover); }
   .card-head{ display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; padding-left:6px; gap:10px; }
-  .card-subject{ display:inline-flex; align-items:center; gap:6px; font-family:'Sora', sans-serif; font-weight:600; font-size:14.5px; margin:0 0 3px; }
+  .card-subject{ display:inline-flex; align-items:center; gap:6px; font-family: var(--font-heading); font-weight:600; font-size:14.5px; margin:0 0 3px; }
   .card-subject .dot{ width:7px; height:7px; border-radius:50%; background: var(--dot, var(--accent)); flex-shrink:0; }
   .card-period{ font-size:11px; color: var(--text-3); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
-  .card-date{ font-size:12px; color: var(--text-3); font-weight:500; }
-  .done-toggle{ display:inline-flex; align-items:center; gap:6px; flex-shrink:0; font-family:'Inter', sans-serif; font-size:12px; font-weight:500; color: var(--text-2); cursor:pointer; padding:5px 10px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface-2); transition: all .12s ease; }
+  .done-toggle{ display:inline-flex; align-items:center; gap:6px; flex-shrink:0; font-family: var(--font-body); font-size:12px; font-weight:500; color: var(--text-2); cursor:pointer; padding:5px 10px; border-radius:999px; border:1px solid var(--border-strong); background:var(--surface-2); transition: all .12s ease; }
   .done-toggle input{ display:none; }
   .done-toggle .check{ width:14px; height:14px; border-radius:4px; border:1.5px solid var(--border-strong); display:flex; align-items:center; justify-content:center; flex-shrink:0; transition: all .12s ease; }
   .done-toggle .check svg{ opacity:0; transition: opacity .12s ease; }
@@ -95,23 +103,18 @@
   .card-label{ font-size:11px; font-weight:600; letter-spacing:0.03em; text-transform:uppercase; color: var(--text-3); margin:0 0 3px; }
   .card-text{ font-size:14px; line-height:1.55; margin:0; white-space:pre-wrap; color: var(--text); }
   .card-actions{ display:flex; justify-content:flex-end; margin-top:10px; padding-left:6px; }
-  .btn-del{ display:inline-flex; align-items:center; gap:5px; background:none; border:none; font-family:'Inter',sans-serif; font-size:12.5px; font-weight:500; color: var(--text-3); cursor:pointer; padding:4px 6px; border-radius:6px; }
+  .btn-del{ display:inline-flex; align-items:center; gap:5px; background:none; border:none; font-family: var(--font-body); font-size:12.5px; font-weight:500; color: var(--text-3); cursor:pointer; padding:4px 6px; border-radius:6px; }
   .btn-del:hover{ color: var(--danger); background: var(--danger-bg); }
   .empty{ grid-column:1/-1; text-align:center; padding: 3.5rem 1rem; color: var(--text-2); font-size:14.5px; }
   .empty svg{ margin-bottom:12px; color: var(--text-3); }
 
-  .live-status{
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;
-    background: linear-gradient(135deg, var(--accent) 0%, #7A6FE8 100%); color:#fff;
-    border-radius: var(--radius-lg); padding:1.1rem 1.4rem; margin-bottom:1.25rem;
-    font-family:'Inter', sans-serif; transition: background .4s ease;
-  }
+  .live-status{ display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; background: linear-gradient(135deg, var(--accent) 0%, #7A6FE8 100%); color:#fff; border-radius: var(--radius-lg); padding:1.1rem 1.4rem; margin-bottom:1.25rem; font-family: var(--font-body); transition: background .4s ease; }
   .live-status.status-green{ background: linear-gradient(135deg, #1B9E5B 0%, #16A672 100%); }
   .live-status.status-yellow{ background: linear-gradient(135deg, #C98A12 0%, #E0A429 100%); }
   .live-status.status-red{ background: linear-gradient(135deg, #C23B32 0%, #DB4C42 100%); }
   .live-status .ls-main{ font-size:15px; font-weight:600; }
   .live-status .ls-main .ls-sub{ font-weight:400; opacity:0.85; font-size:13px; display:block; margin-top:2px; }
-  .live-status .ls-time{ font-family:'JetBrains Mono', monospace; font-size:22px; font-weight:600; letter-spacing:0.01em; }
+  .live-status .ls-time{ font-family: var(--font-mono); font-size:22px; font-weight:600; letter-spacing:0.01em; }
 
   .section-label{ font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-3); margin:0 0 8px; }
   .today-list{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); margin-bottom:1.5rem; overflow:hidden; box-shadow: var(--shadow-card); }
@@ -123,28 +126,16 @@
   .today-row .trow-sub{ font-size:12px; color: var(--text-3); }
   .today-empty{ padding:1rem 1.1rem; font-size:13.5px; color: var(--text-3); }
 
-  .week-grid{ display:grid; grid-template-columns: repeat(7, 1fr); gap:10px; }
-  .day-col{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding:0.75rem; min-height:120px; }
-  .day-col.is-today{ border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-  .day-col-title{ font-family:'Sora',sans-serif; font-weight:600; font-size:13px; margin:0 0 8px; color: var(--text-2); }
-  .class-block{ background: var(--surface-2); border-left:3px solid var(--dot, var(--accent)); border-radius:8px; padding:7px 9px; margin-bottom:7px; }
-  .class-block .cb-period{ font-size:10px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; color: var(--text-3); }
-  .class-block .cb-subject{ font-size:12.5px; font-weight:600; margin-top:1px; }
-  .class-block .cb-time{ font-size:11px; color: var(--text-2); margin-top:1px; }
-  .class-block .cb-loc{ font-size:11px; color: var(--text-3); margin-top:1px; }
-  .day-empty{ font-size:11.5px; color: var(--text-3); padding:6px 0; }
-
   .grade-card{ background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 1.1rem 1.3rem; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; gap:14px; }
-  .grade-card::before{ content:none; }
   .grade-left{ display:flex; align-items:center; gap:10px; min-width:0; }
   .grade-left .dot{ width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-  .grade-name{ font-family:'Sora', sans-serif; font-weight:600; font-size:15px; }
+  .grade-name{ font-family: var(--font-heading); font-weight:600; font-size:15px; }
   .grade-period{ font-size:11.5px; color: var(--text-3); font-weight:600; text-transform:uppercase; letter-spacing:0.03em; }
   .grade-input-wrap{ display:flex; align-items:center; gap:8px; flex-shrink:0; }
   .grade-input-wrap input{ width:110px; text-align:center; font-weight:600; }
 
   .cal-header{ display:flex; align-items:center; justify-content:space-between; margin-bottom:1.25rem; }
-  .cal-title{ font-family:'Sora', sans-serif; font-weight:700; font-size:18px; }
+  .cal-title{ font-family: var(--font-heading); font-weight:700; font-size:18px; }
   .cal-nav{ display:flex; gap:6px; }
   .cal-nav button{ background: var(--surface); border:1px solid var(--border-strong); border-radius:8px; width:32px; height:32px; display:inline-flex; align-items:center; justify-content:center; cursor:pointer; color: var(--text); }
   .cal-nav button:hover{ border-color: var(--text-2); }
@@ -160,7 +151,7 @@
   .cal-dot{ width:6px; height:6px; border-radius:50%; }
   .cal-more{ font-size:9.5px; color: var(--text-3); margin-top:2px; }
   .day-detail{ margin-top:1.25rem; background: var(--surface); border:1px solid var(--border); border-radius: var(--radius-md); padding:1.1rem 1.25rem; }
-  .day-detail h3{ font-family:'Sora', sans-serif; font-size:14.5px; margin:0 0 10px; }
+  .day-detail h3{ font-family: var(--font-heading); font-size:14.5px; margin:0 0 10px; }
   .detail-group-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color: var(--text-3); margin:12px 0 4px; }
   .detail-group-label:first-child{ margin-top:0; }
   .detail-item{ display:flex; align-items:flex-start; gap:8px; font-size:13.5px; padding:5px 0; }
@@ -169,9 +160,10 @@
 
   footer{ text-align:center; margin-top:3rem; font-size:12.5px; color: var(--text-3); }
 
-  @media (max-width:720px){ .week-grid{ grid-template-columns: repeat(7, minmax(90px,1fr)); overflow-x:auto; } }
   @media (max-width:560px){
     .field-row{ grid-template-columns:1fr; }
+    .setup-grid{ grid-template-columns: 1fr; }
+    .setup-card{ padding: 1.5rem; }
     .stats{ grid-template-columns: 1fr 1fr; }
     .stats .stat:last-child{ grid-column: span 2; }
     .tabbar{ font-size:12px; }
@@ -187,6 +179,21 @@
 <body>
 
 <div class="wrap">
+  <div id="setup-screen" class="setup-screen">
+    <div class="setup-card">
+      <span class="eyebrow">One-time setup</span>
+      <h2>What are your classes?</h2>
+      <p class="setup-sub">Type in what you have each period, including lunch. The bell schedule (regular / homeroom / late start) is already built in — you're just naming your periods. You'll only need to do this once, and you can edit it later from the Grades tab.</p>
+      <div class="setup-grid" id="setup-grid"></div>
+      <p class="error-msg" id="setup-error"></p>
+      <button class="primary" id="btn-save-classes">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Save my classes
+      </button>
+    </div>
+  </div>
+
+  <div id="app-main" style="display:none;">
   <header>
     <span class="eyebrow">Personal · private to this device</span>
     <h1>HW Tracker</h1>
@@ -264,9 +271,12 @@
 
   <!-- GRADES -->
   <section id="view-grades" class="view">
-    <div class="panel" style="padding:1.25rem 1.5rem;">
-      <h2 style="margin:0;">Current grades</h2>
-      <p style="font-size:13px; color:var(--text-2); margin:6px 0 0;">Type in your current grade for each class — whatever you're seeing in the gradebook.</p>
+    <div class="panel" style="padding:1.25rem 1.5rem; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <div>
+        <h2 style="margin:0;">Current grades</h2>
+        <p style="font-size:13px; color:var(--text-2); margin:6px 0 0;">Type in your current grade for each class — whatever you're seeing in the gradebook.</p>
+      </div>
+      <button class="secondary" id="btn-edit-classes">Edit my classes</button>
     </div>
     <div id="grade-cards"></div>
   </section>
@@ -290,6 +300,7 @@
       </div>
     </div>
   </section>
+  </div>
 </div>
 
 <footer>Saved only in this browser, on this device.</footer>
@@ -300,38 +311,22 @@
   const TESTS_KEY = 'planner-tests';
   const SCHED_KEY = 'planner-schedule';
   const GRADEVALS_KEY = 'planner-grade-values';
-  const SEED_FLAG = 'planner-seeded-v2';
-  const COLORS = ['#7C6FF0','#14B8A6','#F97066','#F5A524','#3B82F6','#EC4899'];
+  const CLASSES_KEY = 'planner-classes-v3';
+  const COLORS = ['#7C6FF0','#14B8A6','#F97066','#F5A524','#3B82F6','#EC4899','#8B5CF6','#0EA5E9'];
   const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const PERIOD_NUMS = [1,2,3,4,5,6,7,8];
 
-  const FIXED_CLASSES = [
-    {period:1, name:'Drawing 1'},
-    {period:2, name:'Blended Spanish 3'},
-    {period:3, name:'Honors English 2'},
-    {period:5, name:'AP Biology'},
-    {period:6, name:'PE 2'},
-    {period:7, name:'AP Precalculus BC'},
-    {period:8, name:'AP US History'}
-  ];
-  const SUBJECT_TO_PERIOD = {}; FIXED_CLASSES.forEach(c => SUBJECT_TO_PERIOD[c.name] = c.period);
-
-  const DEFAULT_PERIODS = {
-    Mon: [{p:1,start:'07:45',end:'08:35'},{p:2,start:'08:41',end:'09:34'},{p:3,start:'09:40',end:'10:30'},{p:5,start:'11:32',end:'12:22'},{p:6,start:'12:28',end:'13:18'},{p:7,start:'13:24',end:'14:14'},{p:8,start:'14:20',end:'15:10'}],
-    Tue: [{p:1,start:'07:45',end:'08:30'},{p:2,start:'08:35',end:'09:20'},{p:3,start:'10:15',end:'11:00'},{p:5,start:'11:55',end:'12:40'},{p:6,start:'12:45',end:'13:30'},{p:7,start:'13:35',end:'14:20'},{p:8,start:'14:25',end:'15:10'}],
-    Wed: [{p:1,start:'09:00',end:'09:42'},{p:2,start:'09:47',end:'10:29'},{p:3,start:'10:34',end:'11:16'},{p:5,start:'12:08',end:'12:49'},{p:6,start:'12:54',end:'13:36'},{p:7,start:'13:41',end:'14:23'},{p:8,start:'14:28',end:'15:10'}],
-    Thu: [{p:1,start:'07:45',end:'08:30'},{p:2,start:'08:35',end:'09:20'},{p:3,start:'10:15',end:'11:00'},{p:5,start:'11:55',end:'12:40'},{p:6,start:'12:45',end:'13:30'},{p:7,start:'13:35',end:'14:20'},{p:8,start:'14:25',end:'15:10'}],
-    Fri: [{p:1,start:'07:45',end:'08:35'},{p:2,start:'08:41',end:'09:34'},{p:3,start:'09:40',end:'10:30'},{p:5,start:'11:32',end:'12:22'},{p:6,start:'12:28',end:'13:18'},{p:7,start:'13:24',end:'14:14'},{p:8,start:'14:20',end:'15:10'}]
+  const PERIOD_TIMES = {
+    Mon: {1:['07:45','08:35'],2:['08:41','09:34'],3:['09:40','10:30'],4:['10:36','11:26'],5:['11:32','12:22'],6:['12:28','13:18'],7:['13:24','14:14'],8:['14:20','15:10']},
+    Tue: {1:['07:45','08:30'],2:['08:35','09:20'],3:['10:15','11:00'],4:['11:05','11:50'],5:['11:55','12:40'],6:['12:45','13:30'],7:['13:35','14:20'],8:['14:25','15:10']},
+    Wed: {1:['09:00','09:42'],2:['09:47','10:29'],3:['10:34','11:16'],4:['11:21','12:03'],5:['12:08','12:49'],6:['12:54','13:36'],7:['13:41','14:23'],8:['14:28','15:10']},
+    Thu: {1:['07:45','08:30'],2:['08:35','09:20'],3:['10:15','11:00'],4:['11:05','11:50'],5:['11:55','12:40'],6:['12:45','13:30'],7:['13:35','14:20'],8:['14:25','15:10']},
+    Fri: {1:['07:45','08:35'],2:['08:41','09:34'],3:['09:40','10:30'],4:['10:36','11:26'],5:['11:32','12:22'],6:['12:28','13:18'],7:['13:24','14:14'],8:['14:20','15:10']}
   };
-  const ALL_PERIODS = {
-    Mon: [...DEFAULT_PERIODS.Mon.slice(0,3), {p:4,start:'10:36',end:'11:26'}, ...DEFAULT_PERIODS.Mon.slice(3)],
-    Tue: [...DEFAULT_PERIODS.Tue.slice(0,2), {p:4,start:'11:05',end:'11:50'}, ...DEFAULT_PERIODS.Tue.slice(2)],
-    Wed: [...DEFAULT_PERIODS.Wed.slice(0,3), {p:4,start:'11:21',end:'12:03'}, ...DEFAULT_PERIODS.Wed.slice(3)],
-    Thu: [...DEFAULT_PERIODS.Thu.slice(0,2), {p:4,start:'11:05',end:'11:50'}, ...DEFAULT_PERIODS.Thu.slice(2)],
-    Fri: [...DEFAULT_PERIODS.Fri.slice(0,3), {p:4,start:'10:36',end:'11:26'}, ...DEFAULT_PERIODS.Fri.slice(3)]
-  };
-  Object.values(ALL_PERIODS).forEach(list => list.sort((a,b) => a.start.localeCompare(b.start)));
 
   let entries = [], tests = [], schedule = [], gradeValues = {};
+  let FIXED_CLASSES = [];
+  let SUBJECT_TO_PERIOD = {};
   let activeSubject = '', activeTestSubject = '';
   let calYear, calMonth, selectedDateStr = null;
 
@@ -341,36 +336,85 @@
   function fmtTime(t){ if (!t) return ''; const [h,m] = t.split(':').map(Number); const period = h >= 12 ? 'PM' : 'AM'; const h12 = h % 12 === 0 ? 12 : h % 12; return `${h12}:${String(m).padStart(2,'0')} ${period}`; }
   function dayNameForDate(dateStr){ const dt = new Date(dateStr + 'T00:00:00'); return DAYS[(dt.getDay() + 6) % 7]; }
   function periodLabel(subject){ return SUBJECT_TO_PERIOD[subject] ? `Period ${SUBJECT_TO_PERIOD[subject]}` : ''; }
+  function isLunch(name){ return String(name).trim().toLowerCase() === 'lunch'; }
+  function nonLunchClasses(){ return FIXED_CLASSES.filter(c => !isLunch(c.name)); }
 
   function loadAll(){
     try { entries = JSON.parse(localStorage.getItem(HW_KEY)) || []; } catch(e){ entries = []; }
     try { tests = JSON.parse(localStorage.getItem(TESTS_KEY)) || []; } catch(e){ tests = []; }
     try { schedule = JSON.parse(localStorage.getItem(SCHED_KEY)) || []; } catch(e){ schedule = []; }
     try { gradeValues = JSON.parse(localStorage.getItem(GRADEVALS_KEY)) || {}; } catch(e){ gradeValues = {}; }
+    try { FIXED_CLASSES = JSON.parse(localStorage.getItem(CLASSES_KEY)) || []; } catch(e){ FIXED_CLASSES = []; }
   }
   function saveHw(){ try { localStorage.setItem(HW_KEY, JSON.stringify(entries)); } catch(e){} }
   function saveTests(){ try { localStorage.setItem(TESTS_KEY, JSON.stringify(tests)); } catch(e){} }
   function saveSched(){ try { localStorage.setItem(SCHED_KEY, JSON.stringify(schedule)); } catch(e){} }
   function saveGradeValues(){ try { localStorage.setItem(GRADEVALS_KEY, JSON.stringify(gradeValues)); } catch(e){} }
+  function saveClasses(){ try { localStorage.setItem(CLASSES_KEY, JSON.stringify(FIXED_CLASSES)); } catch(e){} }
 
-  function seedDefaults(){
-    if (localStorage.getItem(SEED_FLAG)) return;
-    if (schedule.length === 0){
-      Object.keys(DEFAULT_PERIODS).forEach(day => {
-        DEFAULT_PERIODS[day].forEach(item => {
-          const subj = FIXED_CLASSES.find(c => c.period === item.p);
-          if (!subj) return;
-          schedule.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), subject: subj.name, period: item.p, day, start: item.start, end: item.end });
-        });
+  function rebuildSubjectMap(){
+    SUBJECT_TO_PERIOD = {};
+    FIXED_CLASSES.forEach(c => { SUBJECT_TO_PERIOD[c.name] = c.period; });
+  }
+  function buildScheduleFromClasses(){
+    schedule = [];
+    DAYS.slice(0,5).forEach(day => {
+      PERIOD_NUMS.forEach(p => {
+        const cls = FIXED_CLASSES.find(c => c.period === p);
+        if (!cls) return;
+        const times = PERIOD_TIMES[day][p];
+        schedule.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), subject: cls.name, period: p, day, start: times[0], end: times[1] });
       });
-      saveSched();
-    }
-    localStorage.setItem(SEED_FLAG, '1');
+    });
+    saveSched();
   }
 
   function populateSelect(sel){
-    sel.innerHTML = FIXED_CLASSES.map(c => `<option value="${escapeHtml(c.name)}">Period ${c.period}: ${escapeHtml(c.name)}</option>`).join('');
+    sel.innerHTML = nonLunchClasses().map(c => `<option value="${escapeHtml(c.name)}">Period ${c.period}: ${escapeHtml(c.name)}</option>`).join('');
   }
+
+  const setupScreenEl = document.getElementById('setup-screen');
+  const appMainEl = document.getElementById('app-main');
+  const setupGridEl = document.getElementById('setup-grid');
+  const setupErrEl = document.getElementById('setup-error');
+
+  function buildSetupGrid(prefill){
+    setupGridEl.innerHTML = PERIOD_NUMS.map(p => {
+      const existing = (prefill || []).find(c => c.period === p);
+      return `<div class="setup-field">
+        <label for="setup-p${p}">Period ${p}${p===4 ? ' <span style="font-weight:400;">(e.g. Lunch)</span>' : ''}</label>
+        <input type="text" id="setup-p${p}" placeholder="${p===4 ? 'Lunch' : 'Class name'}" value="${existing ? escapeHtml(existing.name) : ''}">
+      </div>`;
+    }).join('');
+  }
+  function showSetup(prefill){
+    buildSetupGrid(prefill);
+    setupScreenEl.style.display = 'flex';
+    appMainEl.style.display = 'none';
+  }
+  function hideSetup(){
+    setupScreenEl.style.display = 'none';
+    appMainEl.style.display = 'block';
+  }
+  document.getElementById('btn-save-classes').addEventListener('click', () => {
+    const newClasses = [];
+    let missing = false;
+    PERIOD_NUMS.forEach(p => {
+      const val = document.getElementById('setup-p' + p).value.trim();
+      if (!val) missing = true;
+      newClasses.push({ period: p, name: val });
+    });
+    if (missing){ setupErrEl.textContent = 'Fill in all 8 periods (type "Lunch" for your lunch period).'; setupErrEl.style.display = 'block'; return; }
+    setupErrEl.style.display = 'none';
+    FIXED_CLASSES = newClasses;
+    saveClasses();
+    rebuildSubjectMap();
+    buildScheduleFromClasses();
+    populateSelect(subjectEl);
+    populateSelect(tSubjectEl);
+    hideSetup();
+    renderHomework(); renderTests(); renderToday(); renderGrades(); renderCalendar(); updateLiveStatus();
+  });
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -397,7 +441,6 @@
   const statTotal = document.getElementById('stat-total');
   const statDue = document.getElementById('stat-due');
   const statWeek = document.getElementById('stat-week');
-  populateSelect(subjectEl);
 
   function renderStats(){
     statTotal.textContent = entries.length;
@@ -407,7 +450,7 @@
   }
   function renderSubjectTabs(){
     let html = `<button class="subject-tab ${activeSubject==='' ? 'active':''}" data-subject="">All classes</button>`;
-    FIXED_CLASSES.forEach(c => { html += `<button class="subject-tab ${activeSubject===c.name ? 'active':''}" data-subject="${escapeHtml(c.name)}"><span class="dot" style="background:${colorForSubject(c.name)}"></span>${escapeHtml(c.name)}</button>`; });
+    nonLunchClasses().forEach(c => { html += `<button class="subject-tab ${activeSubject===c.name ? 'active':''}" data-subject="${escapeHtml(c.name)}"><span class="dot" style="background:${colorForSubject(c.name)}"></span>${escapeHtml(c.name)}</button>`; });
     tabsEl.innerHTML = html;
     tabsEl.querySelectorAll('.subject-tab').forEach(btn => btn.addEventListener('click', () => { activeSubject = btn.getAttribute('data-subject'); renderHomework(); }));
   }
@@ -445,6 +488,7 @@
   }
   document.getElementById('btn-add').addEventListener('click', () => {
     const subject = subjectEl.value, homework = hwEl.value.trim(), dueDate = dueEl.value, notes = notesEl.value.trim();
+    if (!subject){ errEl.textContent = 'Add your classes first (see setup).'; errEl.style.display = 'block'; return; }
     if (!homework){ errEl.textContent = "Enter what's due first."; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
     entries.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), subject, homework, dueDate, notes, done: false, addedAt: Date.now() });
@@ -461,11 +505,10 @@
   const tSearchEl = document.getElementById('t-search');
   const tTabsEl = document.getElementById('test-subject-tabs');
   const testEntriesEl = document.getElementById('test-entries');
-  populateSelect(tSubjectEl);
 
   function renderTestTabs(){
     let html = `<button class="subject-tab ${activeTestSubject==='' ? 'active':''}" data-subject="">All classes</button>`;
-    FIXED_CLASSES.forEach(c => { html += `<button class="subject-tab ${activeTestSubject===c.name ? 'active':''}" data-subject="${escapeHtml(c.name)}"><span class="dot" style="background:${colorForSubject(c.name)}"></span>${escapeHtml(c.name)}</button>`; });
+    nonLunchClasses().forEach(c => { html += `<button class="subject-tab ${activeTestSubject===c.name ? 'active':''}" data-subject="${escapeHtml(c.name)}"><span class="dot" style="background:${colorForSubject(c.name)}"></span>${escapeHtml(c.name)}</button>`; });
     tTabsEl.innerHTML = html;
     tTabsEl.querySelectorAll('.subject-tab').forEach(btn => btn.addEventListener('click', () => { activeTestSubject = btn.getAttribute('data-subject'); renderTests(); }));
   }
@@ -503,6 +546,7 @@
   }
   document.getElementById('btn-add-test').addEventListener('click', () => {
     const subject = tSubjectEl.value, title = tTitleEl.value.trim(), dueDate = tDueEl.value, notes = tNotesEl.value.trim();
+    if (!subject){ tErrEl.textContent = 'Add your classes first (see setup).'; tErrEl.style.display = 'block'; return; }
     if (!title){ tErrEl.textContent = 'Enter a test or assignment name first.'; tErrEl.style.display = 'block'; return; }
     tErrEl.style.display = 'none';
     tests.push({ id: Date.now().toString(36) + Math.random().toString(36).slice(2,7), subject, title, dueDate, notes, done:false, addedAt: Date.now() });
@@ -514,7 +558,6 @@
   const liveStatusEl = document.getElementById('live-status');
 
   function periodLabelFor(p){
-    if (p === 4) return 'Lunch';
     const c = FIXED_CLASSES.find(c => c.period === p);
     return c ? c.name : `Period ${p}`;
   }
@@ -525,19 +568,21 @@
     return `${m}m ${String(s).padStart(2,'0')}s`;
   }
   function getLiveStatus(now){
+    if (FIXED_CLASSES.length === 0) return { type:'none' };
     for (let dayOffset=0; dayOffset<8; dayOffset++){
       const d = new Date(now); d.setDate(d.getDate()+dayOffset);
       const dayName = DAYS[(d.getDay()+6)%7];
-      const periods = ALL_PERIODS[dayName];
-      if (!periods) continue;
-      for (const item of periods){
-        const startDate = new Date(d); const [sh,sm] = item.start.split(':').map(Number); startDate.setHours(sh,sm,0,0);
-        const endDate = new Date(d); const [eh,em] = item.end.split(':').map(Number); endDate.setHours(eh,em,0,0);
+      const periodsForDay = PERIOD_TIMES[dayName];
+      if (!periodsForDay) continue;
+      for (const p of PERIOD_NUMS){
+        const times = periodsForDay[p];
+        const startDate = new Date(d); const [sh,sm] = times[0].split(':').map(Number); startDate.setHours(sh,sm,0,0);
+        const endDate = new Date(d); const [eh,em] = times[1].split(':').map(Number); endDate.setHours(eh,em,0,0);
         if (dayOffset === 0 && now >= startDate && now < endDate){
-          return { type:'in-period', period:item.p, label: periodLabelFor(item.p), endsAt: endDate, day: dayName };
+          return { type:'in-period', period:p, label: periodLabelFor(p), endsAt: endDate, day: dayName };
         }
         if (startDate > now){
-          return { type:'upcoming', period:item.p, label: periodLabelFor(item.p), startsAt: startDate, isToday: dayOffset===0, day: dayName };
+          return { type:'upcoming', period:p, label: periodLabelFor(p), startsAt: startDate, isToday: dayOffset===0, day: dayName };
         }
       }
     }
@@ -551,16 +596,16 @@
       const remainMs = status.endsAt - new Date();
       const remainMin = remainMs / 60000;
       liveStatusEl.classList.add(remainMin > 15 ? 'status-green' : remainMin > 5 ? 'status-yellow' : 'status-red');
-      liveStatusEl.innerHTML = `<div class="ls-main">Right now: ${status.period === 4 ? 'Lunch' : 'Period ' + status.period + ' · ' + escapeHtml(status.label)}<span class="ls-sub">Ends at ${status.endsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div><div class="ls-time">${formatCountdown(remainMs)} left</div>`;
+      liveStatusEl.innerHTML = `<div class="ls-main">Right now: Period ${status.period} · ${escapeHtml(status.label)}<span class="ls-sub">Ends at ${status.endsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div><div class="ls-time">${formatCountdown(remainMs)} left</div>`;
     } else if (status.type === 'upcoming'){
-      const nextLabel = status.period === 4 ? 'Lunch' : `Period ${status.period} · ${escapeHtml(status.label)}`;
+      const nextLabel = `Period ${status.period} · ${escapeHtml(status.label)}`;
       if (status.isToday){
         liveStatusEl.innerHTML = `<div class="ls-main">Next up: ${nextLabel}<span class="ls-sub">Starts at ${status.startsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div><div class="ls-time">${formatCountdown(status.startsAt - new Date())}</div>`;
       } else {
         liveStatusEl.innerHTML = `<div class="ls-main">Next up: ${nextLabel}<span class="ls-sub">${status.startsAt.toLocaleDateString(undefined,{weekday:'long'})} at ${status.startsAt.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'})}</span></div>`;
       }
     } else {
-      liveStatusEl.innerHTML = `<div class="ls-main">No upcoming classes found.</div>`;
+      liveStatusEl.innerHTML = `<div class="ls-main">No schedule set up yet.</div>`;
     }
   }
   setInterval(updateLiveStatus, 1000);
@@ -612,7 +657,7 @@
 
   const gradeCardsEl = document.getElementById('grade-cards');
   function renderGrades(){
-    gradeCardsEl.innerHTML = FIXED_CLASSES.map(c => { const color = colorForSubject(c.name); const val = gradeValues[c.name] || ''; return `
+    gradeCardsEl.innerHTML = nonLunchClasses().map(c => { const color = colorForSubject(c.name); const val = gradeValues[c.name] || ''; return `
       <div class="grade-card" style="--dot:${color}">
         <div class="grade-left"><span class="dot" style="background:${color}"></span><div><div class="grade-name">${escapeHtml(c.name)}</div><div class="grade-period">Period ${c.period}</div></div></div>
         <div class="grade-input-wrap"><input type="text" class="grade-input" data-subject="${escapeHtml(c.name)}" value="${escapeHtml(val)}" placeholder="e.g. 94% or A-"></div>
@@ -621,6 +666,7 @@
       inp.addEventListener('input', () => { gradeValues[inp.getAttribute('data-subject')] = inp.value; saveGradeValues(); });
     });
   }
+  document.getElementById('btn-edit-classes').addEventListener('click', () => { showSetup(FIXED_CLASSES); });
 
   const calTitle = document.getElementById('cal-title');
   const calDowRow = document.getElementById('cal-dow-row');
@@ -628,8 +674,8 @@
   const dayDetail = document.getElementById('day-detail');
   const dayDetailTitle = document.getElementById('day-detail-title');
   const dayDetailBody = document.getElementById('day-detail-body');
-  const now = new Date();
-  calYear = now.getFullYear(); calMonth = now.getMonth();
+  const now0 = new Date();
+  calYear = now0.getFullYear(); calMonth = now0.getMonth();
   calDowRow.innerHTML = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'].map(d => `<div class="cal-dow">${d}</div>`).join('');
 
   function itemsForDate(dateStr){
@@ -650,7 +696,7 @@
     for (let i=0;i<startOffset;i++) cells += `<div class="cal-cell empty-cell"></div>`;
     for (let d=1; d<=daysInMonth; d++){
       const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-      const { hw, testsToday, classes } = itemsForDate(dateStr);
+      const { hw, testsToday } = itemsForDate(dateStr);
       const dots = [];
       hw.slice(0,4).forEach(e => dots.push(colorForSubject(e.subject)));
       testsToday.slice(0, Math.max(0,4-dots.length)).forEach(t => dots.push(colorForSubject(t.subject)));
@@ -664,6 +710,7 @@
     }
     calGridEl.innerHTML = cells;
     calGridEl.querySelectorAll('.cal-cell[data-date]').forEach(cell => cell.addEventListener('click', () => { selectedDateStr = cell.getAttribute('data-date'); renderCalendar(); showDayDetail(selectedDateStr); }));
+    if (selectedDateStr) showDayDetail(selectedDateStr);
   }
   function showDayDetail(dateStr){
     dayDetail.style.display = 'block';
@@ -686,14 +733,21 @@
   document.getElementById('cal-today').addEventListener('click', () => { const n = new Date(); calYear = n.getFullYear(); calMonth = n.getMonth(); renderCalendar(); });
 
   loadAll();
-  seedDefaults();
   dueEl.value = '';
-  renderHomework();
-  renderTests();
-  renderToday();
-  renderGrades();
-  renderCalendar();
-  updateLiveStatus();
+  if (FIXED_CLASSES.length === 0){
+    showSetup([]);
+  } else {
+    rebuildSubjectMap();
+    populateSelect(subjectEl);
+    populateSelect(tSubjectEl);
+    hideSetup();
+    renderHomework();
+    renderTests();
+    renderToday();
+    renderGrades();
+    renderCalendar();
+    updateLiveStatus();
+  }
 })();
 </script>
 
